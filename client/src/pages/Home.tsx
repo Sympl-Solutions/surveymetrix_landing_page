@@ -542,7 +542,7 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden">
+    <div className="w-full h-full flex flex-col relative">
       <div className="z-20">
         <div className="p-3 sm:p-4 pb-2 flex justify-between items-center relative">
           <h2 className="text-base sm:text-lg font-bold text-[#211E62]">Impact Dashboard</h2>
@@ -573,7 +573,7 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
         </div>
       </div>
 
-      <div className="p-3 sm:p-6 flex-1 flex flex-col gap-4 sm:gap-6 overflow-hidden relative">
+      <div className="p-3 sm:p-6 flex-1 flex flex-col gap-3 sm:gap-4 overflow-visible relative">
         {phase >= 1 && (
           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#5550BA] text-white text-[9px] sm:text-[10px] font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap z-30 shadow-lg">
             Aggregating data across 4 surveys...
@@ -611,14 +611,14 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
         </div>
 
         {phase >= 3 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 relative">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 sm:p-5 relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#5550BA] to-[#948EDE] rounded-t-xl"></div>
             <div className="text-center">
-              <h3 className="text-sm font-bold text-[#211E62] mb-1">Cross-Survey Analysis</h3>
-              <p className="text-xs text-[#6A7290] mb-3">Compare outcomes across all programs and timeframes</p>
-              <div className="flex gap-2 justify-center flex-wrap">
+              <h3 className="text-xs sm:text-sm font-bold text-[#211E62] mb-0.5 sm:mb-1">Cross-Survey Analysis</h3>
+              <p className="text-[10px] sm:text-xs text-[#6A7290] mb-2 sm:mb-3">Compare outcomes across all programs and timeframes</p>
+              <div className="flex gap-1.5 sm:gap-2 justify-center flex-wrap">
                 {["Mentoring", "Workshops", "Leadership"].map((p) => (
-                  <span key={p} className="text-xs bg-[#5550BA] text-white px-3 py-1.5 rounded-md shadow-sm">{p}</span>
+                  <span key={p} className="text-[10px] sm:text-xs bg-[#5550BA] text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-sm">{p}</span>
                 ))}
               </div>
             </div>
@@ -789,12 +789,12 @@ export default function Home() {
             >
               <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#5550BA] via-[#B86890] to-[#948EDE] rounded-t-2xl"></div>
-                <div className="min-h-[380px] sm:min-h-[420px] lg:min-h-[480px] relative p-2 sm:p-3 md:p-6">
+                <div className="min-h-[420px] sm:min-h-[460px] lg:min-h-[520px] relative p-2 sm:p-3 md:p-6">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#B86890]/10 rounded-full blur-3xl"></div>
                     <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#EEEDfb] rounded-full blur-3xl"></div>
                   </div>
-                  <div className="w-full h-full relative z-10" style={{ minHeight: '360px' }}>
+                  <div className="w-full h-full relative z-10" style={{ minHeight: '400px' }}>
                     {animationStarted ? (
                       <AnimatePresence mode="wait">
                         <motion.div

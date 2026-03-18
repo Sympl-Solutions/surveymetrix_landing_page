@@ -54,7 +54,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const [organization, setOrganization] = useState("");
   const [sector, setSector] = useState("");
   const [otherSector, setOtherSector] = useState("");
-  const [step, setStep] = useState<"form" | "pledge" | "done">("form");
+  const [step, setStep] = useState<"form" | "pledge">("form");
   const [message, setMessage] = useState("");
 
   const mutation = useMutation({
@@ -89,8 +89,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   const handlePledge = () => {
     // TODO: Wire up Stripe checkout for $5 pledge
-    // For now, show success state
-    setStep("done");
+    onClose();
   };
 
   useEffect(() => {
@@ -147,7 +146,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <div className="w-12 h-12 rounded-xl bg-[#EEEDfb] flex items-center justify-center mb-4">
                 <Mail size={24} className="text-[#5550BA]" />
               </div>
-              <h3 className="font-display font-bold text-2xl text-[#211E62] mb-2">Join the Waitlist</h3>
+              <h3 className="font-display font-bold text-2xl text-[#211E62] mb-2">Get Early Access</h3>
               <p className="text-[#6A7290] mb-6">Be the first to know when SurveyMetrix launches. No spam, just updates.</p>
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
@@ -223,100 +222,85 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               exit={{ opacity: 0, x: -100 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
             >
-              <div className="bg-gradient-to-br from-[#211E62] via-[#2E2A78] to-[#1a1754] px-8 pt-8 pb-6 text-white relative overflow-hidden">
+              {/* ── Top: Thank you ── */}
+              <div className="bg-gradient-to-br from-[#211E62] via-[#2E2A78] to-[#1a1754] px-7 pt-7 pb-7 text-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-[#5550BA]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#B86890]/15 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
-
+                <div className="absolute bottom-0 left-0 w-28 h-28 bg-[#B86890]/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#B86890] flex items-center justify-center shadow-lg shadow-[#B86890]/30">
-                      <Sparkles size={20} className="text-white" />
-                    </div>
-                    <div className="bg-[#B86890]/20 border border-[#B86890]/30 text-[#F0C4D8] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                      Limited — Founding Testers
-                    </div>
-                  </div>
-
-                  <h3 className="font-display font-bold text-2xl mb-2 leading-tight">
-                    Want to shape<br />SurveyMetrix?
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+                    className="w-12 h-12 rounded-full bg-green-400/20 border border-green-400/40 flex items-center justify-center mb-4"
+                  >
+                    <CheckCircle2 size={26} className="text-green-400" />
+                  </motion.div>
+                  <h3 className="font-display font-bold text-2xl leading-tight mb-2">
+                    You're on the list{name ? `, ${name.split(" ")[0]}` : ""}!
                   </h3>
-                  <p className="text-[#C4C0E8] text-sm leading-relaxed">
-                    Pledge <span className="text-white font-bold">$5</span> to become a founding tester. You'll get exclusive access and directly influence what we build.
+                  <p className="text-[#C4C0E8] text-sm leading-relaxed" data-testid="text-success">
+                    We've saved your spot. You'll be among the first to get access when SurveyMetrix launches — no spam, just the good stuff.
                   </p>
                 </div>
               </div>
 
-              <div className="px-8 py-6">
-                <div className="space-y-3 mb-6">
-                  {[
-                    { icon: Zap, text: "First access to the platform before public launch", color: "text-[#5550BA]", bg: "bg-[#EEEDfb]" },
-                    { icon: Crown, text: "Founding Tester badge — locked to first 200 signups", color: "text-[#B86890]", bg: "bg-[#FAF0F3]" },
-                    { icon: Users, text: "Private feedback channel with the product team", color: "text-[#5550BA]", bg: "bg-[#EEEDfb]" },
-                    { icon: Shield, text: "3 months free when we launch (worth $87+)", color: "text-[#B86890]", bg: "bg-[#FAF0F3]" },
-                  ].map((perk) => (
-                    <div key={perk.text} className="flex items-start gap-3">
-                      <div className={`w-7 h-7 rounded-lg ${perk.bg} flex items-center justify-center shrink-0 mt-0.5`}>
-                        <perk.icon size={14} className={perk.color} />
-                      </div>
-                      <span className="text-sm text-[#4A5068] leading-snug">{perk.text}</span>
+              {/* ── Bottom: Pledge offer ── */}
+              <div className="bg-[#F4F3FC] px-7 py-5">
+                {/* Header row with price inline */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[#FAF0F3] flex items-center justify-center">
+                      <Sparkles size={14} className="text-[#B86890]" />
                     </div>
-                  ))}
-                </div>
-
-                <div className="bg-[#FDFCFA] border border-[#DAD8F6] rounded-xl p-4 mb-5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-[#6A7290] uppercase tracking-wider">Founding Tester Pledge</span>
-                    <div className="flex items-baseline gap-0.5">
-                      <span className="font-display text-2xl font-bold text-[#211E62]">$5</span>
-                      <span className="text-xs text-[#9DA4BC]">one-time</span>
+                    <div>
+                      <p className="text-xs font-bold text-[#211E62] uppercase tracking-wider leading-none">Founding Tester Offer</p>
+                      <p className="text-[10px] text-[#9DA4BC] mt-0.5">First 200 signups only</p>
                     </div>
                   </div>
-                  <p className="text-[11px] text-[#9DA4BC] leading-relaxed">
-                    100% refundable if we don't ship. Your pledge helps us validate demand and build faster.
-                  </p>
+                  <div className="text-right">
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="font-display text-2xl font-bold text-[#211E62]">$5</span>
+                      <span className="text-[10px] text-[#9DA4BC] ml-0.5">one-time</span>
+                    </div>
+                    <p className="text-[9px] text-[#B86890] font-medium">100% refundable</p>
+                  </div>
+                </div>
+
+                {/* 2×2 perk grid */}
+                <div className="grid grid-cols-2 gap-2 mb-5">
+                  {[
+                    { icon: Zap,    text: "First access before public launch",      color: "text-[#5550BA]", bg: "bg-[#EEEDfb]" },
+                    { icon: Shield, text: "2 months free at launch ($100+ value)",  color: "text-[#B86890]", bg: "bg-[#FAF0F3]" },
+                    { icon: Crown,  text: "Founding Tester badge on your account",  color: "text-[#B86890]", bg: "bg-[#FAF0F3]" },
+                    { icon: Users,  text: "Private channel with the product team",  color: "text-[#5550BA]", bg: "bg-[#EEEDfb]" },
+                  ].map((perk) => (
+                    <div key={perk.text} className="flex items-start gap-2 bg-white rounded-xl p-2.5">
+                      <div className={`w-6 h-6 rounded-lg ${perk.bg} flex items-center justify-center shrink-0 mt-0.5`}>
+                        <perk.icon size={12} className={perk.color} />
+                      </div>
+                      <span className="text-[11px] text-[#4A5068] leading-snug">{perk.text}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <button
                   onClick={handlePledge}
                   data-testid="button-pledge"
-                  className="w-full bg-[#B86890] text-white font-bold py-3.5 rounded-xl hover:bg-[#9E4A74] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#B86890]/20 group"
+                  className="w-full bg-[#B86890] text-white font-bold py-3 rounded-xl hover:bg-[#9E4A74] transition-all flex items-center justify-center gap-2 shadow-md shadow-[#B86890]/20 group text-sm"
                 >
-                  <CreditCard size={18} />
+                  <CreditCard size={16} />
                   Pledge $5 — Become a Founding Tester
-                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                 </button>
 
                 <button
-                  onClick={() => setStep("done")}
+                  onClick={onClose}
                   data-testid="button-skip-pledge"
-                  className="w-full text-center text-xs text-[#9DA4BC] hover:text-[#6A7290] mt-3 py-2 transition-colors"
+                  className="w-full text-center text-xs text-[#9DA4BC] hover:text-[#6A7290] mt-2.5 py-1.5 transition-colors"
                 >
                   No thanks, I'll just stay on the waitlist
                 </button>
               </div>
-            </motion.div>
-          )}
-
-          {step === "done" && (
-            <motion.div
-              key="done"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="p-8 text-center"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="w-16 h-16 rounded-full bg-[#B86890]/10 flex items-center justify-center mx-auto mb-4"
-              >
-                <CheckCircle2 size={32} className="text-[#B86890]" />
-              </motion.div>
-              <h3 className="font-display font-bold text-2xl text-[#211E62] mb-2">You're in!</h3>
-              <p className="text-[#6A7290]" data-testid="text-success">
-                {message || "We'll be in touch soon with early access details."}
-              </p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -327,203 +311,352 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
 const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
   const [phase, setPhase] = useState(0);
+  const [added, setAdded] = useState<number[]>([]);
+
+  const outcomes = [
+    { emoji: "💰", name: "Wage Growth & Earnings", desc: "Measures entry-to-exit income change. Tracks whether participants are earning meaningfully more after program completion than when they first enrolled.", q: "How much has your income improved since joining this program?", tag: "WIOA", type: "Likert" },
+    { emoji: "📋", name: "Job Retention at 6 Months", desc: "Tracks whether participants remain in employment 180 days after placement. A core accountability metric for funders and workforce boards.", q: "Are you currently employed at the same job you had 6 months ago?", tag: "WIOA", type: "Yes / No" },
+    { emoji: "💛", name: "Empathy & Social Awareness", desc: "Assesses growth in perspective-taking and care for others. Validated against CASEL's social-emotional learning framework for youth programs.", q: "How often do you try to understand things from another person's point of view?", tag: "CASEL", type: "Likert" },
+    { emoji: "😊", name: "Joy & Wellbeing", desc: "Uses validated psychometric questions to measure subjective wellbeing. Adapted from WHO-5 to reflect program participation and sense of belonging.", q: "How much has participating improved your sense of joy and wellbeing?", tag: "WHO-5", type: "Likert" },
+  ];
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1200),
-      setTimeout(() => setPhase(2), 3000),
-      setTimeout(() => setPhase(3), 4500),
-      setTimeout(() => onComplete?.(), 6500),
+      setTimeout(() => setPhase(1), 1000),
+      setTimeout(() => { setPhase(2); setAdded([0]); }, 3500),
+      setTimeout(() => setAdded([0, 2]), 6000),
+      setTimeout(() => { setPhase(3); setAdded([0, 1, 2]); }, 8500),
+      setTimeout(() => onComplete?.(), 11000),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
     <div className="w-full h-full overflow-hidden flex flex-col relative">
-      <div className="p-4 flex items-center gap-3 z-10">
-        <div className="w-8 h-8 rounded-lg bg-[#FAF0F3] text-[#B86890] flex items-center justify-center">
-          <BarChart size={16} />
-        </div>
+      {/* Header */}
+      <div className="px-4 pt-4 pb-2 flex items-center justify-between z-10">
         <div>
-          <h3 className="font-bold text-sm text-[#211E62]">Outcome Framework</h3>
-          <p className="text-xs text-[#6A7290]">KPI & Question Linking</p>
+          <h3 className="font-bold text-sm text-[#211E62]">Outcome Library</h3>
+          <p className="text-[10px] text-[#6A7290]">Browse and manage the outcomes your surveys measure.</p>
         </div>
+        {phase >= 3 && (
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#5550BA] text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
+            <Plus size={10} /> Add Outcome
+          </motion.div>
+        )}
       </div>
-      
-      <div className="flex flex-1 overflow-hidden relative flex-col sm:flex-row">
-        <motion.div layout className={`p-4 sm:p-6 flex flex-col justify-center transition-all duration-700 ease-in-out ${phase >= 2 ? 'sm:w-1/2 sm:border-r border-b sm:border-b-0 border-gray-100' : 'w-full items-center'}`}>
-          <motion.div layout className={phase >= 2 ? 'w-full' : 'w-full max-w-sm'}>
-            <h4 className="text-xs font-semibold text-[#6A7290] uppercase tracking-wider mb-3 sm:mb-4">Strategic KPIs</h4>
-            <div className="space-y-3">
-              <motion.div layout className={`bg-white border-2 rounded-lg p-4 shadow-sm relative z-20 transition-colors ${phase >= 1 ? 'border-[#5550BA]' : 'border-gray-200'}`}>
-                <div className="font-medium text-sm text-[#211E62]">Program Rating</div>
-                <div className="text-xs text-[#6A7290] mt-1 mb-4">Average rating out of 5</div>
-                
-                {phase < 2 ? (
-                  <div className="relative">
-                    <div className={`text-xs font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 w-full justify-center shadow-md relative z-10 transition-all ${phase >= 1 ? 'bg-[#5550BA] text-white shadow-[#5550BA]/20' : 'bg-gray-200 text-gray-400'}`}>
-                      <LinkIcon size={14} /> Link to Question
-                    </div>
-                    {phase >= 1 && (
-                      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="absolute -top-9 left-1/2 -translate-x-1/2 bg-[#5550BA] text-white text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-20 shadow-lg">
-                        Linking KPI to question library...
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#5550BA]"></div>
+
+      {/* Filter pills */}
+      {phase >= 1 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-2 flex gap-1.5 flex-wrap">
+          {["All Outcomes 29", "Workforce Dev. 7", "Youth Dev. 7"].map((tag, i) => (
+            <motion.span
+              key={tag}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.12 }}
+              className={`text-[9px] font-semibold px-2 py-1 rounded-full border ${i === 0 ? 'bg-[#5550BA] text-white border-[#5550BA]' : 'bg-white text-[#4A5068] border-gray-200'}`}
+            >
+              {tag}
+            </motion.span>
+          ))}
+        </motion.div>
+      )}
+
+      {/* Outcome cards — 2-col mobile / 3-col desktop */}
+      <div className="flex-1 px-3 pb-3 overflow-hidden flex flex-col">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
+          {outcomes.map((o, i) => {
+            const isAdded = added.includes(i);
+            return (
+              <AnimatePresence key={o.name}>
+                {phase >= 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1, duration: 0.35 }}
+                    className={`bg-white border rounded-xl p-2.5 flex flex-col transition-all relative ${isAdded ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20 shadow-sm' : 'border-gray-200'}`}
+                  >
+                    {/* Add / check button top-right */}
+                    {phase >= 2 && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="absolute top-2 right-2">
+                        {isAdded ? (
+                          <div className="w-5 h-5 rounded-full bg-[#5550BA] flex items-center justify-center">
+                            <CheckCircle2 size={11} className="text-white" />
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center">
+                            <Plus size={10} className="text-gray-400" />
+                          </div>
+                        )}
                       </motion.div>
                     )}
-                  </div>
-                ) : (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[11px] text-[#B86890] font-medium flex items-center gap-1">
-                    <CheckCircle2 size={12} /> Linked to Library
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base mb-2 ${isAdded ? 'bg-[#EEEDfb]' : 'bg-gray-50'}`}>{o.emoji}</div>
+                    <div className={`text-[10px] font-bold leading-tight mb-1 pr-5 ${isAdded ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
+                    <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4">{o.desc}</div>
+                    {isAdded && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:block text-[8px] text-[#6A7290] italic mt-1.5 leading-snug border-t border-[#EEEDfb] pt-1.5">"{o.q}"</motion.div>
+                    )}
+                    <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                      <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 py-0.5 rounded font-medium">{o.type}</span>
+                      <span className="text-[7px] text-[#5550BA] bg-[#EEEDfb] px-1 py-0.5 rounded font-medium">{o.tag}</span>
+                    </div>
                   </motion.div>
                 )}
-
-                {phase >= 2 && (
-                  <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: "120px", opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }} className="absolute top-1/2 -right-[120px] h-0.5 bg-[#5550BA]/30 border-t border-dashed border-[#5550BA] z-0 hidden sm:flex items-center justify-center">
-                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="w-5 h-5 rounded-full bg-[#5550BA] text-white flex items-center justify-center absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 shadow-md">
-                      <LinkIcon size={10} />
-                    </motion.div>
-                  </motion.div>
-                )}
-              </motion.div>
-              
-              <motion.div layout className="bg-white border border-gray-100 rounded-lg p-4 opacity-60">
-                <div className="font-medium text-sm text-[#211E62]">Recommendation Rate</div>
-                <div className="text-xs text-[#6A7290] mt-1">NPS Score calculation</div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </motion.div>
-        
-        <AnimatePresence>
-          {phase >= 2 && (
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className="sm:w-1/2 p-4 sm:p-6 flex flex-col justify-center">
-              <h4 className="text-xs font-semibold text-[#6A7290] uppercase tracking-wider mb-3 sm:mb-4">Question Library</h4>
-              <div className="space-y-3 relative z-10">
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3, type: "spring" }} className="bg-white border border-[#5550BA]/40 shadow-[0_0_15px_rgba(31,78,121,0.08)] rounded-lg p-3 pl-8 relative">
-                  <GripVertical size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300" />
-                  <div className="font-medium text-sm text-[#5550BA]">Rate the program out of 5</div>
-                  <div className="text-xs text-[#6A7290] mt-1 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#B86890] inline-block"></span>
-                    Rating Scale (1-5)
-                  </div>
-                </motion.div>
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5, type: "spring" }} className="bg-white border border-gray-200 rounded-lg p-3 pl-8 relative opacity-60">
-                  <GripVertical size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300" />
-                  <div className="font-medium text-sm text-[#4A5068]">How satisfied were you?</div>
-                  <div className="text-xs text-[#6A7290] mt-1 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-purple-400 inline-block"></span>
-                    Multiple Choice
-                  </div>
-                </motion.div>
+              </AnimatePresence>
+            );
+          })}
+          {/* Placeholder 5th + 6th card slots to fill the row */}
+          {phase >= 1 && [
+            { emoji: "🧠", name: "Resilience & Self-Management", desc: "Measures emotional regulation and the ability to recover from setbacks. Tied to CASEL competencies used widely in youth-serving and workforce programs.", tag: "CASEL", type: "Likert" },
+            { emoji: "🏠", name: "Housing Stability", desc: "Captures risk of losing stable housing in the next 60 days. A critical social determinant linked to program engagement and outcomes.", tag: "SDOH", type: "Yes / No" },
+          ].map((o, i) => (
+            <motion.div
+              key={o.name}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + i * 0.1 }}
+              className="bg-white border border-gray-200 rounded-xl p-2.5 flex flex-col"
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base mb-2 bg-gray-50">{o.emoji}</div>
+              <div className="text-[10px] font-bold leading-tight mb-1 text-[#211E62]">{o.name}</div>
+              <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4">{o.desc}</div>
+              <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 py-0.5 rounded font-medium">{o.type}</span>
+                <span className="text-[7px] text-[#5550BA] bg-[#EEEDfb] px-1 py-0.5 rounded font-medium">{o.tag}</span>
               </div>
-              {phase >= 3 && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 bg-[#EEEDfb] text-[#5550BA] text-xs font-medium px-4 py-2 rounded-lg text-center">
-                  Questions matched to your KPIs automatically
-                </motion.div>
-              )}
             </motion.div>
-          )}
-        </AnimatePresence>
+          ))}
+        </div>
 
-        <motion.div className="absolute z-30 pointer-events-none" animate={{ left: phase < 2 ? '42%' : '72%', top: phase < 2 ? '55%' : '45%' }} transition={{ duration: 0.6, ease: "easeInOut" }}>
-          <svg width="18" height="22" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
-        </motion.div>
+        {phase >= 3 && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-2 bg-[#5550BA] text-white text-xs font-bold py-2 rounded-xl text-center shadow-md">
+            3 outcomes selected — Build Survey →
+          </motion.div>
+        )}
       </div>
+
+      {/* Cursor — aligned with 3-col grid card add buttons */}
+      <motion.div className="absolute z-30 pointer-events-none" animate={{
+        left:  added.length === 0 ? '29%' : added.length === 1 ? '90%' : added.length === 2 ? '60%' : '49%',
+        top:   added.length === 0 ? '37%' : added.length === 1 ? '37%' : added.length === 2 ? '37%' : '91%',
+      }} transition={{ duration: 0.7, ease: "easeInOut" }}>
+        <svg width="16" height="20" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
+      </motion.div>
     </div>
   );
 };
 
 const Step2 = ({ onComplete }: { onComplete?: () => void }) => {
   const [phase, setPhase] = useState(0);
-  const [text, setText] = useState("Rate the program out of 5");
+  const [added, setAdded] = useState<number[]>([]);
+  const [editing, setEditing] = useState(false);
+  const [editDone, setEditDone] = useState(false);
+
+  const libraryOutcomes = [
+    { emoji: "📋", name: "Job Retention at 6 Months",   q: "Are you currently employed at the same job you had 6 months ago?",             type: "Yes / No", tag: "WIOA"   },
+    { emoji: "💡", name: "Financial Literacy",           q: "How well do you feel you understand budgeting and managing your finances?",      type: "Likert",   tag: "SDOH"   },
+    { emoji: "🔍", name: "Job Search Confidence",        q: "How confident do you feel about finding a new job right now?", qEdited: "How confident do you feel about finding work in digital marketing right now?", type: "Likert", tag: "Custom" },
+    { emoji: "🌱", name: "Mental Wellbeing",             q: "Over the past two weeks, how often have you felt calm and at ease?",            type: "Likert",   tag: "WHO-5"  },
+    { emoji: "🏆", name: "Credential Attainment",        q: "Have you obtained a new professional credential since starting the program?",   type: "Yes / No", tag: "WIOA"   },
+    { emoji: "🤝", name: "Community Belonging",          q: "How strongly do you feel you belong to your local community?",                  type: "Likert",   tag: "CASEL"  },
+  ];
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1200),
-      setTimeout(() => setPhase(2), 3200),
-      setTimeout(() => { setPhase(3); setText("Rate the mentoring program out of 5"); }, 4800),
-      setTimeout(() => onComplete?.(), 6500),
+      setTimeout(() => setPhase(1), 800),            // all 6 library items appear
+      setTimeout(() => setPhase(2), 2200),           // cursor → program dropdown (opens)
+      setTimeout(() => setPhase(3), 3800),           // program selected
+      setTimeout(() => setAdded([0]), 5000),         // select outcome #1 (Job Retention)
+      setTimeout(() => setAdded([0, 2]), 6400),      // select outcome #3 (Job Search Confidence) — skips #2
+      setTimeout(() => setAdded([0, 2, 4]), 7800),   // select outcome #5 (Credential Attainment) — skips #4
+      setTimeout(() => setEditing(true), 9400),      // start editing Q2 (Job Search Confidence)
+      setTimeout(() => { setEditDone(true); setEditing(false); }, 11200), // edit done
+      setTimeout(() => onComplete?.(), 14000),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  const allPrograms = ["Employment Readiness", "Digital Skills", "Youth Leadership"];
+
+  // phase: 0=idle, 1=library shown, 2=cursor goes to program dropdown, 3=program selected, 4=outcomes added, 5=editing, 6=edit done+3rd outcome, 7=done
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col relative">
-      <div className="p-3 flex items-center gap-2">
-        <span className="font-semibold text-sm">Survey Builder</span>
-        <span className="text-xs text-[#9DA4BC]">/ Mid-Year Review</span>
-      </div>
-      
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex-1 p-3 sm:p-6 flex gap-4 sm:gap-6 relative">
-          <div className="flex-1 max-w-sm mx-auto flex flex-col items-center">
-            <div className="w-full h-10 sm:h-12 bg-[#5550BA] rounded-t-xl"></div>
-            <div className="w-full bg-white border border-t-0 border-gray-200 rounded-b-xl shadow-sm p-3 sm:p-5 pb-6 sm:pb-8 min-h-[220px] sm:min-h-[250px] relative">
-              <h3 className="text-base sm:text-lg font-bold text-[#211E62] text-center mb-4 sm:mb-6">Mid-Year Program Feedback</h3>
-              
-              {phase < 1 ? (
-                <div className="relative">
-                  <motion.div className="border-2 border-dashed border-[#DAD8F6] rounded-lg h-24 mb-4 flex items-center justify-center bg-[#EEEDfb]/30" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
-                    <span className="text-xs text-[#5550BA] font-medium">Drop question here</span>
-                  </motion.div>
-                </div>
-              ) : (
-                <motion.div initial={{ y: -50, opacity: 0, scale: 0.9 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 20 }} className={`bg-white border rounded-lg p-4 shadow-md relative ${phase < 2 ? 'border-[#5550BA]' : 'border-[#5550BA]/20'}`}>
-                  <div className="flex justify-between items-start mb-3 relative z-10">
-                    <div className="relative w-full">
-                      <div className="w-full font-medium text-sm text-[#211E62]">{text}</div>
-                      {phase === 2 && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="absolute top-0.5 right-0 w-0.5 h-4 bg-[#5550BA]" />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between gap-1 mb-3 relative z-10">
-                    {[1,2,3,4,5].map(n => (
-                      <div key={n} className="flex-1 h-8 rounded border border-gray-200 flex items-center justify-center text-xs text-[#9DA4BC]">{n}</div>
-                    ))}
-                  </div>
-                  
-                  <div className="relative z-10">
-                    {phase >= 3 ? (
-                      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#FAF0F3] text-[#B86890] text-[10px] px-2 py-1 rounded flex items-center gap-1 font-medium w-fit">
-                        <CheckCircle2 size={10} /> Personalized for Mentoring Program
-                      </motion.div>
-                    ) : (
-                      <div className="bg-[#EEEDfb] text-[#5550BA] text-[10px] px-2 py-1 rounded flex items-center gap-1 font-medium w-fit">
-                        <LinkIcon size={10} /> Linked to: Participant Satisfaction KPI
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-
-              {phase === 1 && (
-                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-[#5550BA] text-white text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-20 shadow-lg">
-                  Question dropped into survey
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-[#5550BA]"></div>
-                </motion.div>
-              )}
-              {phase === 2 && (
-                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-[#B86890] text-white text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-20 shadow-lg">
-                  Auto-personalizing for your program...
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-[#B86890]"></div>
-                </motion.div>
-              )}
-              {phase >= 3 && (
-                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-green-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-20 shadow-lg flex items-center gap-1">
-                  <CheckCircle2 size={10} /> Survey ready to send
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-green-600"></div>
-                </motion.div>
-              )}
-            </div>
+    <div className="w-full h-full overflow-hidden flex flex-col sm:flex-row relative">
+      {/* Left: outcome library — capped height on mobile, fixed width on desktop */}
+      <div className="h-[42%] sm:h-auto sm:w-[38%] border-b sm:border-b-0 sm:border-r border-gray-100 flex flex-col bg-gray-50/50 overflow-hidden">
+        <div className="px-2 pt-2 pb-1 shrink-0">
+          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-widest mb-1">Outcome Library</div>
+          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg px-2 py-0.5">
+            <Search size={9} className="text-gray-400 shrink-0" />
+            <span className="text-[9px] text-gray-400">Search outcomes...</span>
           </div>
+        </div>
 
-          <motion.div className="absolute z-30 pointer-events-none" animate={{ left: phase < 1 ? '48%' : phase < 2 ? '48%' : '55%', top: phase < 1 ? '50%' : phase < 2 ? '58%' : '52%' }} transition={{ duration: 0.5, ease: "easeInOut" }}>
-            <svg width="18" height="22" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
-          </motion.div>
+        <div className="px-2 pb-1 space-y-1 flex-1 overflow-y-auto">
+          {phase >= 1 && libraryOutcomes.map((o, i) => {
+            const isAdded = added.includes(i);
+            return (
+              <motion.div
+                key={o.name}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className={`flex items-center gap-1.5 rounded-lg px-2 py-1 border transition-all ${isAdded ? 'bg-[#EEEDfb] border-[#5550BA]/40' : 'bg-white border-gray-200'}`}
+              >
+                <span className="text-[11px] shrink-0">{o.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <div className={`text-[9px] font-semibold truncate ${isAdded ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
+                  <div className="hidden sm:flex gap-1 mt-0.5">
+                    <span className="text-[7px] text-[#5550BA] bg-[#EEEDfb] px-1 rounded">{o.tag}</span>
+                    <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 rounded">{o.type}</span>
+                  </div>
+                </div>
+                {isAdded ? <CheckCircle2 size={10} className="text-[#5550BA] shrink-0" /> : <Plus size={10} className="text-gray-400 shrink-0" />}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
+
+      {/* Right: program selector at top, then survey questions */}
+      <div className="flex-1 flex flex-col">
+        {/* Program selector — cursor goes here first */}
+        <div className="px-2.5 pt-2.5 pb-2 border-b border-gray-100 relative">
+          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-wide mb-1.5">Link Survey to Program</div>
+          <div className={`flex items-center justify-between bg-white border rounded-lg px-2.5 py-1.5 cursor-pointer transition-all ${phase >= 2 ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20' : 'border-gray-200'}`}>
+            {phase >= 3 ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 min-w-0">
+                {/* Program tile badge */}
+                <div className="flex items-center gap-1.5 bg-[#EEEDfb] border border-[#5550BA]/20 rounded-md px-2 py-1 min-w-0">
+                  <div className="w-4 h-4 rounded bg-[#5550BA] flex items-center justify-center shrink-0">
+                    <span className="text-[7px] font-bold text-white">ER</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[9px] font-bold text-[#211E62] leading-none">Employment Readiness</div>
+                    <div className="text-[7px] text-[#6A7290] leading-none mt-0.5">Workforce Program · Active</div>
+                  </div>
+                </div>
+                <span className="text-[7px] text-[#9DA4BC] shrink-0">{added.length} q.</span>
+              </motion.div>
+            ) : (
+              <span className="text-[9px] text-[#9DA4BC]">Select a program...</span>
+            )}
+            <ChevronDown size={10} className="text-[#9DA4BC] shrink-0 ml-1" />
+          </div>
+          {/* Dropdown options shown at phase 2 */}
+          {phase === 2 && (
+            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="absolute left-2.5 right-2.5 top-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-30">
+              {allPrograms.map((p, i) => {
+                const initials = p.split(" ").map(w => w[0]).join("").slice(0, 2);
+                const colors = ["#5550BA", "rgb(168,85,247)", "#B86890"];
+                const subtitles = ["Workforce Program", "Digital Training", "Youth Leadership"];
+                return (
+                  <div key={p} className={`flex items-center gap-2 px-2.5 py-1.5 border-b last:border-b-0 border-gray-100 ${i === 0 ? 'bg-[#EEEDfb]' : 'hover:bg-gray-50'}`}>
+                    <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: colors[i] }}>
+                      <span className="text-[7px] font-bold text-white">{initials}</span>
+                    </div>
+                    <div>
+                      <div className={`text-[9px] font-semibold ${i === 0 ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{p}</div>
+                      <div className="text-[7px] text-[#9DA4BC]">{subtitles[i]}</div>
+                    </div>
+                    {i === 0 && <CheckCircle2 size={10} className="text-[#5550BA] ml-auto" />}
+                  </div>
+                );
+              })}
+            </motion.div>
+          )}
+        </div>
+
+        <div className="flex-1 px-2 py-2 overflow-hidden space-y-1.5">
+          <AnimatePresence>
+            {added.map((idx, surveyPos) => {
+              const o = libraryOutcomes[idx];
+              const isThisEditing = editing && idx === 2;
+              const isThisDone = editDone && idx === 2;
+              const questionText = isThisDone ? o.qEdited! : o.q;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                  className={`bg-white border rounded-lg px-2 py-1.5 shadow-sm ${isThisEditing ? 'border-[#B86890] ring-1 ring-[#B86890]/20' : isThisDone ? 'border-[#B86890]/40' : 'border-[#5550BA]/25'}`}
+                >
+                  {/* Top row: number badge + type + name + status */}
+                  <div className="flex items-center gap-1 mb-1">
+                    <span className="w-4 h-4 rounded bg-[#EEEDfb] text-[#5550BA] text-[7px] font-bold flex items-center justify-center shrink-0">{surveyPos + 1}</span>
+                    <span className="text-[7px] font-semibold text-white bg-[#5550BA] px-1 py-0.5 rounded shrink-0">{o.type}</span>
+                    <span className="text-[8px] text-[#6A7290] truncate flex-1">{o.name}</span>
+                    {isThisEditing && (
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[7px] text-[#B86890] font-medium shrink-0">
+                        <PenTool size={7} /> Editing
+                      </motion.span>
+                    )}
+                    {isThisDone && (
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[7px] text-[#B86890] font-medium shrink-0">
+                        <CheckCircle2 size={7} /> Personalised
+                      </motion.span>
+                    )}
+                  </div>
+                  {/* Question text */}
+                  <div className={`text-[9px] leading-snug mb-1 ${isThisEditing ? 'text-[#B86890] font-medium' : 'text-[#211E62]'}`}>
+                    {questionText}
+                    {isThisEditing && <motion.span animate={{ opacity: [1,0,1] }} transition={{ repeat: Infinity, duration: 0.7 }} className="inline-block w-0.5 h-2.5 bg-[#B86890] ml-0.5 align-middle" />}
+                  </div>
+                  {/* Compact input preview */}
+                  {o.type === "Yes / No" ? (
+                    <div className="flex gap-1">
+                      <div className="flex-1 text-center text-[7px] font-semibold border border-gray-200 rounded py-0.5 text-[#211E62] bg-gray-50">Yes</div>
+                      <div className="flex-1 text-center text-[7px] font-semibold border border-gray-200 rounded py-0.5 text-[#211E62] bg-gray-50">No</div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map(n => (
+                        <div key={n} className="flex-1 text-center text-[7px] border border-gray-200 rounded py-0.5 text-[#9DA4BC] bg-gray-50">{n}</div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+
+          {added.length === 0 && phase >= 1 && (
+            <motion.div animate={{ opacity: [0.4, 0.75, 0.4] }} transition={{ repeat: Infinity, duration: 2 }} className="border-2 border-dashed border-[#DAD8F6] rounded-xl h-14 flex items-center justify-center">
+              <span className="text-[9px] text-[#5550BA] font-medium">Click an outcome to add →</span>
+            </motion.div>
+          )}
+          {editDone && (
+            <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-green-50 border border-green-200 rounded-lg py-1.5 px-2 flex items-center gap-1.5">
+              <CheckCircle2 size={10} className="text-green-600 shrink-0" />
+              <div>
+                <div className="text-[8px] font-bold text-green-700">Survey ready · 3 questions linked</div>
+                <div className="text-[7px] text-green-600">Employment Readiness Program · Active</div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Cursor — idle → dropdown → item[0] → item[2] → item[4] → edit Q2 */}
+      <motion.div className="absolute z-30 pointer-events-none" animate={{
+        left: phase < 2 ? '19%'
+            : phase < 3 ? '72%'
+            : added.length === 0 ? '18%'
+            : added.length === 1 ? '18%'
+            : added.length === 2 ? '18%'
+            : editing ? '78%'
+            : '78%',
+        top:  phase < 2 ? '52%'
+            : phase < 3 ? '21%'
+            : added.length === 0 ? '38%'   // row 0 of 6
+            : added.length === 1 ? '56%'   // row 2 of 6
+            : added.length === 2 ? '72%'   // row 4 of 6
+            : editing ? '58%'
+            : '58%',
+      }} transition={{ duration: 0.6, ease: "easeInOut" }}>
+        <svg width="14" height="18" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
+      </motion.div>
     </div>
   );
 };
@@ -533,102 +666,212 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1200),
-      setTimeout(() => setPhase(2), 3200),
-      setTimeout(() => setPhase(3), 4800),
-      setTimeout(() => onComplete?.(), 6500),
+      setTimeout(() => setPhase(1), 1000),   // filter bar / computing tooltip
+      setTimeout(() => setPhase(2), 3200),   // KPI cards animate in
+      setTimeout(() => setPhase(3), 6000),   // bottom panels slide in
+      setTimeout(() => setPhase(4), 9000),   // insight badge appears
+      setTimeout(() => onComplete?.(), 14500), // hold fully-loaded dashboard for 5s then cycle
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  const programs = [
+    { name: "Employment Readiness", color: "#5550BA" },
+    { name: "Digital Skills", color: "rgb(168,85,247)" },
+    { name: "Youth Leadership", color: "#B86890" },
+  ];
+
+  const stats = [
+    { label: "Job Confidence", value: "76", unit: "%", change: "+18%", from: "58% → 76%", color: "#5550BA", delay: 0.15 },
+    { label: "Job Retention", value: "81", unit: "%", change: "+9%", from: "72% → 81%", color: "rgb(168,85,247)", delay: 0.3 },
+    { label: "Wellbeing Score", value: "3.9", unit: "/5", change: "+0.7", from: "3.2 → 3.9", color: "#B86890", delay: 0.45 },
+  ];
+
+  // Empathy & Social Awareness — pre/post score as % of 5-point scale
+  const empathyBars = [
+    { prog: "Employment Readiness", color: "#5550BA", pre: 56, post: 74 },
+    { prog: "Digital Skills", color: "rgb(168,85,247)", pre: 52, post: 70 },
+    { prog: "Youth Leadership", color: "#B86890", pre: 58, post: 82 },
+  ];
+
+  // Credential Attainment — quarterly % of participants who obtained a credential
+  const quarterData = [
+    { q: "Q1", er: 38, ds: 45, yl: 31 },
+    { q: "Q2", er: 52, ds: 58, yl: 44 },
+    { q: "Q3", er: 67, ds: 72, yl: 59 },
+    { q: "Q4", er: 81, ds: 79, yl: 73 },
+  ];
+
   return (
-    <div className="w-full h-full flex flex-col relative">
-      <div className="z-20">
-        <div className="p-3 sm:p-4 pb-2 flex justify-between items-center relative">
-          <h2 className="text-base sm:text-lg font-bold text-[#211E62]">Impact Dashboard</h2>
-          <div className={`flex items-center gap-1.5 text-[10px] sm:text-xs font-medium text-white bg-[#5550BA] rounded-md px-3 sm:px-4 py-1.5 sm:py-2 shadow-sm transition-all ${phase >= 1 ? 'ring-2 ring-green-400/50' : ''}`}>
-            <Filter size={12} /> {phase >= 1 ? 'Filters Applied' : 'Apply Filters'}
+    <div className="w-full h-full flex flex-col relative bg-[#FAFAFA] overflow-hidden">
+      {/* Header */}
+      <div className="px-3 pt-3 pb-1.5 bg-white border-b border-gray-100">
+        <div className="flex items-center justify-between mb-1">
+          <div>
+            <div className="text-[11px] font-bold text-[#211E62]">Impact Dashboard</div>
+            <div className="text-[8px] text-[#6A7290]">Aggregated across programs & timeframes</div>
+          </div>
+          <div className="flex gap-1">
+            <div className="flex items-center gap-0.5 bg-gray-50 border border-gray-200 rounded px-1.5 py-0.5 text-[7px] text-[#6A7290] font-medium">
+              📅 All of 2024 <ChevronDown size={7} />
+            </div>
+            <div className="flex items-center gap-0.5 bg-gray-50 border border-gray-200 rounded px-1.5 py-0.5 text-[7px] text-[#6A7290] font-medium">
+              3 Surveys <ChevronDown size={7} />
+            </div>
           </div>
         </div>
-        
-        <div className="px-3 sm:px-4 pb-3 sm:pb-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-2 sm:p-2.5 flex items-center justify-between relative">
-            <div className="flex flex-col">
-              <span className="text-[9px] sm:text-[10px] font-bold text-[#6A7290] uppercase tracking-wider mb-0.5">Surveys Included</span>
-              <span className="text-[11px] sm:text-xs font-semibold text-[#211E62] flex items-center gap-1">4 Surveys Selected <ChevronDown size={12} className="text-[#9DA4BC]" /></span>
-            </div>
-            <div className="flex -space-x-2">
-              <div className="w-5 h-5 rounded-full border border-white bg-[#5550BA] flex items-center justify-center text-[8px] text-white font-bold">M</div>
-              <div className="w-5 h-5 rounded-full border border-white bg-purple-500 flex items-center justify-center text-[8px] text-white font-bold">W</div>
-              <div className="w-5 h-5 rounded-full border border-white bg-gray-200 flex items-center justify-center text-[8px] text-[#4A5068] font-bold">+2</div>
-            </div>
-          </div>
-          <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-2 sm:p-2.5 flex items-center justify-between relative">
-            <div className="flex flex-col">
-              <span className="text-[9px] sm:text-[10px] font-bold text-[#6A7290] uppercase tracking-wider mb-0.5">Time Range</span>
-              <span className="text-[11px] sm:text-xs font-semibold text-[#211E62] flex items-center gap-1">Jan - Dec 2024 <ChevronDown size={12} className="text-[#9DA4BC]" /></span>
-            </div>
-            <span className="text-[10px] bg-white border border-gray-200 px-2 py-0.5 rounded text-[#6A7290] font-medium hidden sm:inline">Over Time</span>
-          </div>
+        {/* Program filter chips */}
+        <div className="flex items-center gap-1 flex-wrap">
+          {programs.map((p, i) => (
+            <motion.span
+              key={p.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.08 }}
+              className="text-[7px] font-semibold px-1.5 py-0.5 rounded-full border flex items-center gap-0.5"
+              style={{ color: p.color, borderColor: p.color + "50", backgroundColor: p.color + "15" }}
+            >
+              <span className="w-1 h-1 rounded-full inline-block" style={{ backgroundColor: p.color }} />
+              {p.name}
+            </motion.span>
+          ))}
+          <span className="text-[7px] text-[#9DA4BC] ml-1">342 responses</span>
         </div>
       </div>
 
-      <div className="p-3 sm:p-6 flex-1 flex flex-col gap-3 sm:gap-4 overflow-visible relative">
-        {phase >= 1 && (
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#5550BA] text-white text-[9px] sm:text-[10px] font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap z-30 shadow-lg">
-            Aggregating data across 4 surveys...
-            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#5550BA]"></div>
-          </motion.div>
-        )}
+      {/* Phase 1: computing tooltip */}
+      {phase === 1 && (
+        <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute top-14 left-1/2 -translate-x-1/2 bg-[#211E62] text-white text-[8px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-30 shadow-lg flex items-center gap-1.5">
+          <motion.span animate={{ opacity: [1,0.4,1] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+          Aggregating 342 responses across 3 programs & 4 quarters...
+        </motion.div>
+      )}
 
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-3 sm:mt-4">
-          {[
-            { label: "Satisfaction", icon: BarChart, value: "4.6", unit: "/5", change: "+0.8", from: "from 3.8 last period", color: "#5550BA", delay: 0.3 },
-            { label: "Skill Dev.", icon: Users, value: "84", unit: "%", change: "+15%", from: "from 69% last period", color: "rgb(168,85,247)", delay: 0.5 },
-            { label: "Retention", icon: CheckSquare, value: "92", unit: "%", change: "+4%", from: "from 88% last period", color: "rgb(249,115,22)", delay: 0.7 },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-white p-2.5 sm:p-4 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden">
-              <div className="text-[10px] sm:text-xs font-medium mb-1 flex items-center gap-1 sm:gap-1.5" style={{ color: phase >= 2 ? '#6A7290' : '#9DA4BC' }}>
-                <stat.icon size={12} className="shrink-0" style={{ color: phase >= 2 ? stat.color : '#d1d5db' }} /> <span className="truncate">{stat.label}</span>
-              </div>
-              <div className="flex items-end gap-1 sm:gap-2 mt-1 sm:mt-2">
-                {phase >= 2 ? (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: stat.delay }} className="flex flex-col sm:flex-row sm:items-end gap-0.5 sm:gap-2">
-                    <div className="text-xl sm:text-3xl font-bold text-[#211E62]">{stat.value}<span className="text-sm sm:text-lg text-[#9DA4BC] font-medium">{stat.unit}</span></div>
-                    <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: stat.delay + 0.4, type: "spring" }} className="flex items-center text-[10px] sm:text-xs font-bold text-[#B86890] sm:mb-1 bg-[#FAF0F3] px-1 sm:px-1.5 py-0.5 rounded w-fit">
-                      <ArrowUp size={10} className="mr-0.5" /> {stat.change}
-                    </motion.div>
+      {/* KPI stat cards */}
+      <div className="px-2.5 pt-2 pb-1.5">
+        <div className="grid grid-cols-3 gap-1.5">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-2 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-0.5 rounded-t-xl" style={{ backgroundColor: s.color }} />
+              <div className="text-[7px] text-[#6A7290] font-medium mb-0.5 mt-0.5">{s.label}</div>
+              {phase >= 2 ? (
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: s.delay }}>
+                  <div className="text-base font-bold text-[#211E62] leading-none">
+                    {s.value}<span className="text-[9px] text-[#9DA4BC] font-medium">{s.unit}</span>
+                  </div>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }}>
+                    <span className="text-[7px] font-bold text-[#B86890] bg-[#FAF0F3] px-1 py-0.5 rounded inline-flex items-center gap-0.5 mt-0.5">
+                      <ArrowUp size={6} />{s.change}
+                    </span>
+                    <div className="text-[6px] text-[#9DA4BC] mt-0.5">{s.from} avg.</div>
                   </motion.div>
-                ) : (
-                  <div className="text-xl sm:text-3xl font-bold text-gray-300">—<span className="text-sm sm:text-lg text-gray-200 font-medium">{stat.unit}</span></div>
-                )}
-              </div>
-              {phase >= 2 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: stat.delay + 0.6 }} className="text-[9px] sm:text-[10px] text-[#9DA4BC] mt-1 hidden sm:block">{stat.from}</motion.div>
+                </motion.div>
+              ) : (
+                <div className="text-base font-bold text-gray-200">—</div>
               )}
             </div>
           ))}
         </div>
-
-        {phase >= 3 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 sm:p-5 relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#5550BA] to-[#948EDE] rounded-t-xl"></div>
-            <div className="text-center">
-              <h3 className="text-xs sm:text-sm font-bold text-[#211E62] mb-0.5 sm:mb-1">Cross-Survey Analysis</h3>
-              <p className="text-[10px] sm:text-xs text-[#6A7290] mb-2 sm:mb-3">Compare outcomes across all programs and timeframes</p>
-              <div className="flex gap-1.5 sm:gap-2 justify-center flex-wrap">
-                {["Mentoring", "Workshops", "Leadership"].map((p) => (
-                  <span key={p} className="text-[10px] sm:text-xs bg-[#5550BA] text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-sm">{p}</span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        <motion.div className="absolute z-30 pointer-events-none" animate={{ left: phase < 1 ? '82%' : phase < 2 ? '35%' : '60%', top: phase < 1 ? '8%' : phase < 2 ? '42%' : '75%' }} transition={{ duration: 0.6, ease: "easeInOut" }}>
-          <svg width="18" height="22" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
-        </motion.div>
       </div>
+
+      {/* Bottom panels: bar chart + quarterly trend */}
+      {phase >= 3 && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex-1 px-2.5 pb-2.5 grid grid-cols-2 gap-2 overflow-hidden">
+
+          {/* Left: Empathy & Social Awareness pre/post by program */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-2.5 flex flex-col">
+            <div className="text-[8px] font-bold text-[#211E62] mb-0.5">Empathy & Social Awareness</div>
+            <div className="text-[6.5px] text-[#9DA4BC] mb-2">Pre ░ → Post ▓ avg. score (out of 5)</div>
+            <div className="space-y-2.5 flex-1">
+              {empathyBars.map((b, i) => (
+                <div key={b.prog}>
+                  <div className="flex justify-between mb-0.5">
+                    <span className="text-[7px] text-[#6A7290] truncate max-w-[70px]">{b.prog}</span>
+                    <span className="text-[7px] font-bold" style={{ color: b.color }}>{(b.post / 20).toFixed(1)}/5</span>
+                  </div>
+                  {/* Pre bar */}
+                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-0.5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${b.pre}%` }}
+                      transition={{ delay: 0.1 + i * 0.12, duration: 0.6, ease: "easeOut" }}
+                      className="h-full rounded-full opacity-30"
+                      style={{ backgroundColor: b.color }}
+                    />
+                  </div>
+                  {/* Post bar */}
+                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${b.post}%` }}
+                      transition={{ delay: 0.4 + i * 0.12, duration: 0.8, ease: "easeOut" }}
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: b.color }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Credential Attainment quarterly per program */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-2.5 flex flex-col">
+            <div className="text-[8px] font-bold text-[#211E62] mb-0.5">Credential Attainment</div>
+            <div className="text-[6.5px] text-[#9DA4BC] mb-1.5">Quarterly % · All programs · 2024</div>
+
+            {/* Mini grouped bar chart by quarter */}
+            <div className="flex-1 flex items-end gap-1.5">
+              {quarterData.map((qd, qi) => (
+                <div key={qd.q} className="flex-1 flex flex-col items-center gap-0.5">
+                  <div className="w-full flex items-end gap-0.5" style={{ height: 44 }}>
+                    {[
+                      { val: qd.er, color: "#5550BA" },
+                      { val: qd.ds, color: "rgb(168,85,247)" },
+                      { val: qd.yl, color: "#B86890" },
+                    ].map((bar, bi) => (
+                      <motion.div
+                        key={bi}
+                        className="flex-1 rounded-sm"
+                        style={{ backgroundColor: bar.color }}
+                        initial={{ height: 0 }}
+                        animate={{ height: `${(bar.val / 100) * 44}px` }}
+                        transition={{ delay: 0.3 + qi * 0.12 + bi * 0.05, duration: 0.5, ease: "easeOut" }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[6px] text-[#9DA4BC]">{qd.q}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Legend */}
+            <div className="flex gap-2 mt-1.5 flex-wrap">
+              {programs.map(p => (
+                <div key={p.name} className="flex items-center gap-0.5">
+                  <div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: p.color }} />
+                  <span className="text-[6px] text-[#6A7290]">{p.name.split(" ")[0]}</span>
+                </div>
+              ))}
+            </div>
+
+            {phase >= 4 && (
+              <motion.div initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-1.5 bg-[#EEEDfb] rounded-lg px-1.5 py-1 flex items-center gap-1">
+                <TrendingUp size={8} className="text-[#5550BA] shrink-0" />
+                <span className="text-[6.5px] text-[#5550BA] font-semibold">All 3 programs improved Q1→Q4</span>
+              </motion.div>
+            )}
+          </div>
+
+        </motion.div>
+      )}
+
+      {/* Cursor — aligned with filter bar → KPI cards → bottom panels */}
+      <motion.div className="absolute z-30 pointer-events-none" animate={{
+        left: phase < 2 ? '74%' : phase < 3 ? '50%' : phase < 4 ? '25%' : '76%',
+        top:  phase < 2 ? '9%'  : phase < 3 ? '44%' : phase < 4 ? '72%' : '88%',
+      }} transition={{ duration: 0.7, ease: "easeInOut" }}>
+        <svg width="14" height="18" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
+      </motion.div>
     </div>
   );
 };
@@ -682,16 +925,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, [animationStarted]);
 
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % stepsData.length);
-      setHighestStep((prev) => Math.max(prev, (currentStep + 1) % stepsData.length));
-    }, 7000);
-    
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, currentStep]);
+  // Cycling is driven entirely by each step's onComplete callback — no fixed interval
 
   return (
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans selection:bg-[#B86890]/20">
@@ -699,7 +933,8 @@ export default function Home() {
       
       {/* 1) Nav bar */}
       <header className="px-6 lg:px-12 py-4 flex justify-between items-center bg-[#FDFCFA] border-b border-[#DAD8F6] sticky top-0 z-50">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <img src="/logo.png" alt="SurveyMetrix" className="h-8 w-8 rounded-lg object-contain" />
           <span className="font-display text-xl text-[#211E62]">Survey<span className="text-[#5550BA]">Metrix</span></span>
         </div>
         
@@ -708,7 +943,7 @@ export default function Home() {
           <a href="#how-it-works" className="text-[#44429C] hover:text-[#211E62] transition-colors">How it works</a>
           <a href="#impact-areas" className="text-[#44429C] hover:text-[#211E62] transition-colors">Impact Areas</a>
           <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold normal-case tracking-normal text-sm">
-            Join the Waitlist
+            Get Early Access
           </button>
         </div>
         
@@ -725,7 +960,7 @@ export default function Home() {
           <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">How it works</a>
           <a href="#impact-areas" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">Impact Areas</a>
           <button onClick={() => { setShowWaitlist(true); setMobileMenuOpen(false); }} data-testid="button-waitlist-mobile-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg font-semibold text-sm w-full">
-            Join the Waitlist
+            Get Early Access
           </button>
         </div>
       )}
@@ -736,7 +971,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 bg-[#FDFCFA]" style={{ height: '240px' }}></div>
 
         <div className="relative z-10 pt-8 sm:pt-10 md:pt-14 pb-8 sm:pb-12 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-5xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -751,19 +986,21 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-[#211E62] mb-5 sm:mb-6 leading-[1.1]"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-[3.25rem] text-[#211E62] mb-5 sm:mb-6 leading-[1.2] font-semibold"
             >
-              Surveys that actually{' '}
-              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA] text-[110%]">measure</span> outcomes.
+              <span style={{ fontStyle: "italic" }} className="text-[#B86890]">Finally.</span>{' '}
+              A survey tool built for nonprofits that actually{' '}
+              <span style={{ fontStyle: "italic" }} className="text-[#5550BA]">measures outcomes</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-base md:text-lg text-[#4A5068] mb-10 leading-relaxed max-w-xl mx-auto font-light"
+              className="text-base md:text-lg text-[#4A5068] mb-10 leading-relaxed max-w-3xl mx-auto font-light"
             >
-              SurveyMetrics automatically measures participant change and aggregates outcomes—no spreadsheets, no manual work.
+              With SurveyMetrics, you choose your outcomes, build surveys in a few clicks, and measure participant change automatically — across every program, every cohort, every year.
             </motion.p>
 
             <motion.div
@@ -830,206 +1067,92 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-6"><div className="border-t border-[#DAD8F6]"></div></div>
 
       {/* Scroll-based 3-Step Journey */}
-      <section id="how-it-works" className="py-14 sm:py-24 px-4 sm:px-6 scroll-mt-16">
+      <section id="how-it-works" className="py-8 sm:py-14 px-4 sm:px-6 scroll-mt-16">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12 sm:mb-20"
+            className="text-center mb-8 sm:mb-12"
           >
-            <div className="inline-block bg-[#DAD8F6] border border-[#BCB8EE] text-[#2E2E7A] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-5">
+            <div className="inline-block bg-[#DAD8F6] border border-[#BCB8EE] text-[#2E2E7A] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
               How it works
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-4">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-0">
               Three steps to <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">real</span> outcomes
             </h2>
-            <p className="text-[#4A5068] text-base font-light max-w-md mx-auto">
-              From defining what matters to watching data fill in — it all connects automatically.
-            </p>
           </motion.div>
 
-          <div className="space-y-16 sm:space-y-32">
+          <div className="space-y-10 sm:space-y-16">
             {[
               {
                 step: "1",
                 title: "Choose what you want to measure",
                 subtitle: "Start with what matters",
-                body: "Pick outcomes from a pre-validated library — wellbeing, job confidence, skill gain, belonging, and more. Aligned to WIOA, CASEL, and SDOH standards your funders already recognise. No starting from scratch.",
-                highlights: ["Pre-validated outcome library", "Aligned to WIOA, CASEL & SDOH", "Funder-recognised standards"],
+                body: "Pick from a pre-validated outcome library — wellbeing, confidence, job retention, skill gain, belonging — or add your own outcomes based on your logic model. Aligned to WIOA, CASEL, and SDOH standards your funders already recognise.",
+                mobileBody: "Choose from validated outcomes aligned to WIOA, CASEL, and SDOH — or add your own.",
+                highlights: [],
                 visual: (
-                  <div className="bg-white rounded-2xl border border-[#DAD8F6] p-6 shadow-lg">
-                    <div className="flex items-center gap-2 mb-5">
-                      <div className="w-8 h-8 rounded-lg bg-[#EEEDfb] flex items-center justify-center">
-                        <Target size={16} className="text-[#5550BA]" />
-                      </div>
-                      <span className="text-xs font-semibold text-[#211E62] uppercase tracking-wider">Outcome Framework</span>
-                    </div>
-                    <div className="space-y-3">
-                      {["Participant Confidence", "Skill Development", "Community Belonging"].map((item, i) => (
-                        <motion.div
-                          key={item}
-                          initial={{ opacity: 0, x: -16 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: 0.3 + i * 0.15, duration: 0.4 }}
-                          className="flex items-center gap-3 bg-[#FDFCFA] border border-[#DAD8F6] rounded-lg px-4 py-3"
-                        >
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.5 + i * 0.15, type: "spring" }}
-                            className="w-6 h-6 rounded-full bg-[#5550BA] flex items-center justify-center"
-                          >
-                            <CheckCircle2 size={14} className="text-white" />
-                          </motion.div>
-                          <span className="text-sm font-medium text-[#211E62]">{item}</span>
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: "100%" }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.7 + i * 0.15, duration: 0.6 }}
-                            className="flex-1 h-1.5 bg-[#EEEDfb] rounded-full overflow-hidden ml-auto max-w-[80px]"
-                          >
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${[75, 60, 45][i]}%` }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.9 + i * 0.15, duration: 0.8 }}
-                              className="h-full bg-[#5550BA] rounded-full"
-                            />
-                          </motion.div>
-                        </motion.div>
-                      ))}
-                    </div>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 1.2, duration: 0.4 }}
-                      className="mt-4 flex items-center gap-2 text-xs text-[#B86890] font-medium"
-                    >
-                      <LinkIcon size={12} />
-                      3 outcomes linked to 12 questions
-                    </motion.div>
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                  >
+                    <img
+                      src="/outcome-library.png"
+                      alt="Outcome Library screenshot"
+                      className="w-full h-full object-cover object-top block"
+                    />
+                  </motion.div>
                 ),
               },
               {
                 step: "2",
-                title: "Auto-generated surveys you can make your own",
+                title: "Build surveys in a few clicks",
                 subtitle: "Generated, then personalized",
-                body: "We auto-generate your pre- and post-program surveys from validated question sets — then let you tweak every question to match your program's language, context, and audience. No writing from scratch, but full control to personalize.",
-                highlights: ["Auto-generated from validated question banks", "Edit any question to fit your program", "Personalize language, scale, and context"],
+                body: "Pre- and post-program surveys are built automatically from validated question sets. No writing. No guessing about whether your questions actually measure what you think they do.",
+                mobileBody: "Surveys are auto-built from validated question sets. No writing, no guessing.",
+                highlights: [],
                 visual: (
-                  <div className="bg-white rounded-2xl border border-[#DAD8F6] p-6 shadow-lg">
-                    <div className="flex items-center gap-2 mb-5">
-                      <div className="w-8 h-8 rounded-lg bg-[#FAF0F3] flex items-center justify-center">
-                        <PenTool size={16} className="text-[#B86890]" />
-                      </div>
-                      <span className="text-xs font-semibold text-[#211E62] uppercase tracking-wider">Survey Builder</span>
-                    </div>
-                    <div className="space-y-2.5">
-                      {[
-                        { q: "I feel more confident in my abilities", edited: false, type: "Likert Scale", color: "bg-[#5550BA]" },
-                        { q: "I learned new skills in this mentoring program", edited: true, type: "Likert Scale", color: "bg-[#B86890]" },
-                        { q: "How would you rate the program?", edited: false, type: "Rating", color: "bg-[#948EDE]" },
-                      ].map((item, i) => (
-                        <motion.div
-                          key={item.q}
-                          initial={{ opacity: 0, y: 12 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: 0.3 + i * 0.12, duration: 0.4 }}
-                          className={`bg-[#FDFCFA] border rounded-lg p-3 pl-7 relative ${item.edited ? 'border-[#B86890]/40 ring-1 ring-[#B86890]/10' : 'border-gray-200'}`}
-                        >
-                          <GripVertical size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-300" />
-                          <div className="font-medium text-sm text-[#211E62]">{item.q}</div>
-                          <div className="text-xs text-[#6A7290] mt-1 flex items-center gap-1.5">
-                            <span className={`w-2 h-2 rounded-full ${item.color} inline-block`}></span>
-                            {item.type}
-                            {item.edited && (
-                              <span className="ml-auto text-[10px] text-[#B86890] font-medium flex items-center gap-1">
-                                <PenTool size={10} /> Personalized
-                              </span>
-                            )}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 1.0, type: "spring" }}
-                      className="mt-4 flex gap-2"
-                    >
-                      <div className="flex-1 bg-[#5550BA] text-white text-xs font-semibold py-2 rounded-lg text-center">Share Survey</div>
-                      <div className="flex-1 bg-[#EEEDfb] text-[#5550BA] text-xs font-semibold py-2 rounded-lg text-center border border-[#DAD8F6]">Preview</div>
-                    </motion.div>
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                  >
+                    <img
+                      src="/survey-builder.png"
+                      alt="Survey builder screenshot"
+                      className="w-full h-full object-cover object-top block"
+                    />
+                  </motion.div>
                 ),
               },
               {
                 step: "3",
-                title: "See outcomes and insights — not just responses",
+                title: "See outcomes — not just responses",
                 subtitle: "Data meets meaning",
-                body: "As responses come in, SurveyMetrix calculates outcomes automatically. How much did confidence improve? Which program cohorts are performing best? You can answer those questions now — without touching a spreadsheet.",
-                highlights: ["Automatic outcome calculation", "Compare across cohorts & programs", "No spreadsheets required"],
+                body: "As responses come in, SurveyMetrics calculates outcomes automatically. How much did confidence improve? Which cohorts are performing best? You can answer those questions now — without touching a spreadsheet.",
+                mobileBody: "Responses become outcomes automatically. See which programs work — no spreadsheets needed.",
+                highlights: [],
                 visual: (
-                  <div className="bg-white rounded-2xl border border-[#DAD8F6] p-6 shadow-lg">
-                    <div className="flex items-center gap-2 mb-5">
-                      <div className="w-8 h-8 rounded-lg bg-[#EEEDfb] flex items-center justify-center">
-                        <BarChart size={16} className="text-[#5550BA]" />
-                      </div>
-                      <span className="text-xs font-semibold text-[#211E62] uppercase tracking-wider">Outcome Dashboard</span>
-                    </div>
-                    <div className="space-y-4">
-                      {[
-                        { label: "Confidence", pct: 78, color: "bg-[#5550BA]" },
-                        { label: "Skill Growth", pct: 65, color: "bg-[#B86890]" },
-                        { label: "Belonging", pct: 82, color: "bg-[#948EDE]" },
-                      ].map((item, i) => (
-                        <div key={item.label}>
-                          <div className="flex justify-between text-xs mb-1.5">
-                            <span className="font-medium text-[#211E62]">{item.label}</span>
-                            <motion.span
-                              initial={{ opacity: 0 }}
-                              whileInView={{ opacity: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.8 + i * 0.15 }}
-                              className="font-mono text-[#5550BA] font-medium"
-                            >
-                              {item.pct}%
-                            </motion.span>
-                          </div>
-                          <div className="h-2.5 bg-[#EEEDfb] rounded-full overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${item.pct}%` }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.5 + i * 0.15, duration: 1, ease: "easeOut" }}
-                              className={`h-full ${item.color} rounded-full`}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 1.3, duration: 0.4 }}
-                      className="mt-5 flex items-center justify-between bg-[#FAF0F3] border border-[#B86890]/20 rounded-lg px-4 py-2.5"
-                    >
-                      <span className="text-xs font-medium text-[#B86890]">142 responses across 3 programs</span>
-                      <div className="text-xs font-semibold text-[#B86890] flex items-center gap-1">
-                        <Download size={12} /> Export
-                      </div>
-                    </motion.div>
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                  >
+                    <img
+                      src="/dashboard.png"
+                      alt="Outcome dashboard screenshot"
+                      className="w-full h-full object-cover object-top block"
+                    />
+                  </motion.div>
                 ),
               },
             ].map((step, i) => (
@@ -1042,27 +1165,11 @@ export default function Home() {
                 className={`flex flex-col ${i % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 lg:gap-16 items-center`}
               >
                 <div className="w-full lg:w-1/2">
-                  <h3 className="font-display text-2xl md:text-3xl text-[#211E62] mb-4">
+                  <h3 className="font-display text-xl sm:text-2xl md:text-3xl text-[#211E62] mb-3 sm:mb-4">
                     {step.step}. {step.title}
                   </h3>
-                  <p className="text-[#4A5068] text-base font-light leading-relaxed mb-6">{step.body}</p>
-                  <ul className="space-y-2.5">
-                    {step.highlights.map((h, j) => (
-                      <motion.li
-                        key={h}
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 + j * 0.1, duration: 0.35 }}
-                        className="flex items-center gap-2.5 text-sm text-[#4A5068]"
-                      >
-                        <div className="w-5 h-5 rounded-full bg-[#EEEDfb] flex items-center justify-center shrink-0">
-                          <CheckCircle2 size={12} className="text-[#5550BA]" />
-                        </div>
-                        {h}
-                      </motion.li>
-                    ))}
-                  </ul>
+                  <p className="sm:hidden text-[#4A5068] text-sm font-light leading-relaxed">{step.mobileBody}</p>
+                  <p className="hidden sm:block text-[#4A5068] text-base font-light leading-relaxed">{step.body}</p>
                 </div>
                 <div className="w-full lg:w-1/2">
                   {step.visual}
@@ -1126,9 +1233,6 @@ export default function Home() {
             className="mb-10 sm:mb-14"
           >
             <div className="text-xs font-semibold text-[#5550BA] uppercase tracking-widest mb-4">Built for nonprofit programs</div>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] text-[#211E62] mb-4 leading-[1.15]">
-              Works for the programs<br />your organisation already runs.
-            </h2>
             <p className="text-[#4A5068] text-base font-light max-w-lg leading-relaxed">
               Pre-built outcome frameworks for every major nonprofit sector — no setup from scratch, no external consultant, no PhD required.
             </p>
@@ -1326,13 +1430,16 @@ export default function Home() {
               data-testid="button-waitlist-cta"
               className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
             >
-              Join the Waitlist <ArrowRight size={16} />
+              Get Early Access <ArrowRight size={16} />
             </button>
 
           </motion.div>
 
           <div className="max-w-5xl mx-auto mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-[#5550BA]/20 flex flex-col md:flex-row justify-between items-center gap-4">
-            <span className="font-display text-base text-white">Survey<span className="text-[#948EDE]">Metrix</span></span>
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="SurveyMetrix" className="h-7 w-7 rounded-lg object-contain brightness-0 invert" />
+              <span className="font-display text-base text-white">Survey<span className="text-[#948EDE]">Metrix</span></span>
+            </div>
 
             <div className="flex gap-6 text-xs font-medium text-[#948EDE]">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

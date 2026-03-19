@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { z } from "zod";
-import { getFirestore, COLLECTION } from "./_firebase";
+import { getDb, COLLECTION } from "./_firebase";
 
 const schema = z.object({
   email: z.string().email(),
@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const parsed = schema.parse(req.body);
-    const db = getFirestore();
+    const db = getDb();
 
     // Use email as document ID (sanitized) — natural dedup key
     const docId = parsed.email.toLowerCase().replace(/[^a-z0-9]/g, "_");

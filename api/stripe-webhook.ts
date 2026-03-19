@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
-import { getFirestore, COLLECTION } from "./_firebase";
+import { getDb, COLLECTION } from "./_firebase";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (email) {
       try {
-        const db = getFirestore();
+        const db = getDb();
         const docId = email.toLowerCase().replace(/[^a-z0-9]/g, "_");
         await db.collection(COLLECTION).doc(docId).update({ pledged: true });
         console.log(`[Firestore] Marked pledged: ${email}`);

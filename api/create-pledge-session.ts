@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Missing email." });
 
-    const origin = "https://surveymetrix.com";
+    const origin = "https://www.surveymetrix.com";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

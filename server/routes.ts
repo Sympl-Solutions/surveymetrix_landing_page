@@ -71,7 +71,7 @@ export async function registerRoutes(
       }
 
       const origin = process.env.NODE_ENV === "production"
-        ? "https://surveymetrix.com"
+        ? "https://www.surveymetrix.com"
         : `${req.protocol}://${req.get("host")}`;
 
       const session = await stripe.checkout.sessions.create({

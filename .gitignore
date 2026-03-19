@@ -4,3 +4,13 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Never commit credentials or service account keys
+*.pem
+*service-account*.json
+*firebase-adminsdk*.json
+*credentials*.json
+attached_assets/
+.env
+.env.*
+!.env.example

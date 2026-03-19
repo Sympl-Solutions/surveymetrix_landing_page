@@ -1302,8 +1302,8 @@ export default function Home() {
           >
             <div className="text-xs font-semibold text-[#5550BA] uppercase tracking-widest mb-4">Built for nonprofit programs</div>
             <h2 className="font-display text-3xl sm:text-4xl text-[#211E62] leading-tight max-w-lg">
-              Works for the programs<br />
-              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">your organization</span> already runs
+              Outcomes designed for<br />
+              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">your organization</span>
             </h2>
           </motion.div>
 

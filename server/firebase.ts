@@ -22,6 +22,10 @@ export function getDb(): Firestore {
       );
     }
     const serviceAccount = JSON.parse(raw);
+    // Fix double-escaped \n in private key (common when pasting JSON into env var UIs)
+    if (typeof serviceAccount.private_key === "string") {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    }
     app = initializeApp({ credential: cert(serviceAccount) });
   }
 

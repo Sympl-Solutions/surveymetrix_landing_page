@@ -22,6 +22,10 @@ export function getDb(): Firestore {
       );
     }
     const serviceAccount = JSON.parse(raw);
+    // Vercel's env var UI double-escapes \n in the private key to \\n — fix it
+    if (typeof serviceAccount.private_key === "string") {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    }
     app = initializeApp({ credential: cert(serviceAccount) });
   }
 

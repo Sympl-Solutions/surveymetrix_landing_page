@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { z } from "zod";
-import { appendRow, findRowByEmail, ensureHeaders } from "./_sheets";
+import { getFirestore, COLLECTION } from "./_firebase";
 
 const schema = z.object({
   email: z.string().email(),
@@ -18,13 +18,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ message: "Method not allowed" });
 
   try {
-    await ensureHeaders();
-
     const parsed = schema.parse(req.body);
+    const db = getFirestore();
 
-    // Check for duplicate by email
-    const existingRow = await findRowByEmail(parsed.email);
-    if (existingRow !== null) {
+    // Use email as document ID (sanitized) — natural dedup key
+    const docId = parsed.email.toLowerCase().replace(/[^a-z0-9]/g, "_");
+    const docRef = db.collection(COLLECTION).doc(docId);
+    const existing = await docRef.get();
+
+    if (existing.exists) {
       return res.status(200).json({
         message: "You're already on the waitlist!",
         alreadyExists: true,
@@ -32,16 +34,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    await appendRow({
+    const entry = {
       name: parsed.name,
       email: parsed.email,
       organization: parsed.organization,
       sector: parsed.sector,
-    });
+      pledged: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    await docRef.set(entry);
 
     return res.status(201).json({
       message: "You're on the waitlist!",
-      entry: { email: parsed.email },
+      entry,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

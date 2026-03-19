@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import orgLogos from "@/assets/logos/logoMap";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db, WAITLIST_COLLECTION } from "@/lib/firebase";
 import {
   BarChart,
   Target,
@@ -61,21 +62,28 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   const mutation = useMutation({
     mutationFn: async (data: { email: string; name: string; organization: string; sector: string }) => {
-      const res = await apiRequest("POST", "/api/waitlist", data);
-      return res.json();
+      const docId = data.email.toLowerCase().replace(/[^a-z0-9]/g, "_");
+      const docRef = doc(db, WAITLIST_COLLECTION, docId);
+      const existing = await getDoc(docRef);
+      if (existing.exists()) {
+        return { message: "You're already on the waitlist!", alreadyExists: true };
+      }
+      await setDoc(docRef, {
+        name: data.name,
+        email: data.email,
+        organization: data.organization,
+        sector: data.sector,
+        pledged: false,
+        createdAt: new Date().toISOString(),
+      });
+      return { message: "You're on the waitlist!", alreadyExists: false };
     },
     onSuccess: (data) => {
       setMessage(data.message);
-      if (data.entry?.id) setWaitlistId(data.entry.id);
       setStep("pledge");
     },
-    onError: (error: Error) => {
-      try {
-        const parsed = JSON.parse(error.message.split(": ").slice(1).join(": "));
-        setMessage(parsed.message || "Something went wrong.");
-      } catch {
-        setMessage("Please enter a valid email address.");
-      }
+    onError: () => {
+      setMessage("Something went wrong. Please try again.");
     },
   });
 
@@ -94,12 +102,13 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   };
 
   const handlePledge = async () => {
-    if (!waitlistId) return;
+    if (!email.trim()) return;
     setPledgeLoading(true);
     try {
-      const res = await apiRequest("POST", "/api/create-pledge-session", {
-        waitlistId,
-        email: email.trim(),
+      const res = await fetch("/api/create-pledge-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
       });
       const data = await res.json();
       if (data.url) {

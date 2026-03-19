@@ -3,7 +3,9 @@
   "outputDirectory": "dist/public",
   "framework": null,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/waitlist" },
+    { "source": "/api/waitlist", "destination": "/api/waitlist" },
+    { "source": "/api/create-pledge-session", "destination": "/api/create-pledge-session" },
+    { "source": "/api/stripe-webhook", "destination": "/api/stripe-webhook" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

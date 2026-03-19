@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, serial, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -9,6 +9,7 @@ export const waitlistEntries = pgTable("waitlist_entries", {
   name: text("name"),
   organization: text("organization"),
   sector: text("sector"),
+  pledged: boolean("pledged").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

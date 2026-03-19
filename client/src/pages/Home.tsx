@@ -56,6 +56,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const [otherSector, setOtherSector] = useState("");
   const [step, setStep] = useState<"form" | "pledge">("form");
   const [message, setMessage] = useState("");
+  const [waitlistId, setWaitlistId] = useState<number | null>(null);
+  const [pledgeLoading, setPledgeLoading] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (data: { email: string; name: string; organization: string; sector: string }) => {
@@ -64,6 +66,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     },
     onSuccess: (data) => {
       setMessage(data.message);
+      if (data.entry?.id) setWaitlistId(data.entry.id);
       setStep("pledge");
     },
     onError: (error: Error) => {
@@ -78,7 +81,10 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!name.trim()) { setMessage("Please enter your name."); return; }
+    if (!email.trim()) { setMessage("Please enter your email address."); return; }
+    if (!organization.trim()) { setMessage("Please enter your organization name."); return; }
+    setMessage("");
     mutation.mutate({
       email: email.trim(),
       name: name.trim(),
@@ -87,9 +93,25 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     });
   };
 
-  const handlePledge = () => {
-    // TODO: Wire up Stripe checkout for $5 pledge
-    onClose();
+  const handlePledge = async () => {
+    if (!waitlistId) return;
+    setPledgeLoading(true);
+    try {
+      const res = await apiRequest("POST", "/api/create-pledge-session", {
+        waitlistId,
+        email: email.trim(),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setMessage("Could not start payment. Please try again.");
+        setPledgeLoading(false);
+      }
+    } catch {
+      setMessage("Could not start payment. Please try again.");
+      setPledgeLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -102,6 +124,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         setOtherSector("");
         setStep("form");
         setMessage("");
+        setWaitlistId(null);
+        setPledgeLoading(false);
         mutation.reset();
       }, 300);
     }
@@ -153,7 +177,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
+                  placeholder="Your name *"
+                  required
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#5550BA] focus:ring-2 focus:ring-[#5550BA]/20 outline-none transition-all text-sm"
                   data-testid="input-name"
                 />
@@ -161,7 +186,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email, you@nonprofit.org"
+                  placeholder="Email, you@nonprofit.org *"
                   required
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#5550BA] focus:ring-2 focus:ring-[#5550BA]/20 outline-none transition-all text-sm"
                   data-testid="input-email"
@@ -170,7 +195,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   type="text"
                   value={organization}
                   onChange={(e) => setOrganization(e.target.value)}
-                  placeholder="Organization name"
+                  placeholder="Organization name *"
+                  required
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#5550BA] focus:ring-2 focus:ring-[#5550BA]/20 outline-none transition-all text-sm"
                   data-testid="input-organization"
                 />
@@ -285,12 +311,15 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <button
                   onClick={handlePledge}
+                  disabled={pledgeLoading || !waitlistId}
                   data-testid="button-pledge"
-                  className="w-full bg-[#B86890] text-white font-bold py-3 rounded-xl hover:bg-[#9E4A74] transition-all flex items-center justify-center gap-2 shadow-md shadow-[#B86890]/20 group text-sm"
+                  className="w-full bg-[#B86890] text-white font-bold py-3 rounded-xl hover:bg-[#9E4A74] transition-all flex items-center justify-center gap-2 shadow-md shadow-[#B86890]/20 group text-sm disabled:opacity-60"
                 >
-                  <CreditCard size={16} />
-                  Pledge $5 — Become a Founding Tester
-                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  {pledgeLoading ? (
+                    <><Loader2 size={16} className="animate-spin" /> Redirecting to payment...</>
+                  ) : (
+                    <><CreditCard size={16} /> Pledge $5 — Become a Founding Tester <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" /></>
+                  )}
                 </button>
 
                 <button
@@ -907,7 +936,18 @@ export default function Home() {
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pledgeBanner, setPledgeBanner] = useState<"success" | "cancelled" | null>(null);
   const animationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pledge = params.get("pledge");
+    if (pledge === "success" || pledge === "cancelled") {
+      setPledgeBanner(pledge);
+      window.history.replaceState({}, "", window.location.pathname);
+      setTimeout(() => setPledgeBanner(null), 6000);
+    }
+  }, []);
 
   useEffect(() => {
     const el = animationRef.current;
@@ -930,7 +970,28 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans selection:bg-[#B86890]/20">
       <WaitlistModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
-      
+
+      {/* Pledge return banner */}
+      {pledgeBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -40 }}
+          className={`fixed top-4 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-2xl shadow-xl text-sm font-semibold flex items-center gap-2 ${
+            pledgeBanner === "success"
+              ? "bg-green-500 text-white"
+              : "bg-[#F4F3FC] text-[#211E62] border border-[#DAD8F6]"
+          }`}
+          data-testid="banner-pledge-status"
+        >
+          {pledgeBanner === "success" ? (
+            <><CheckCircle2 size={16} /> Thank you! Your $5 founding tester pledge is confirmed.</>
+          ) : (
+            <><span>Payment cancelled — your waitlist spot is still saved.</span></>
+          )}
+        </motion.div>
+      )}
+
       {/* 1) Nav bar */}
       <header className="px-6 lg:px-12 py-4 flex justify-between items-center bg-[#FDFCFA] border-b border-[#DAD8F6] sticky top-0 z-50">
         <div className="flex items-center gap-2.5">
@@ -978,7 +1039,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <div className="inline-block bg-[#DAD8F6] border border-[#BCB8EE] text-[#2E2E7A] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6">
-                Outcome Measurement for Nonprofits
+                Surveys That Measure Outcomes
               </div>
             </motion.div>
 
@@ -1010,7 +1071,7 @@ export default function Home() {
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
             >
               <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5">
-                Get Early Access — Free
+                Get Early Access — It's Free
               </button>
             </motion.div>
 
@@ -1233,9 +1294,10 @@ export default function Home() {
             className="mb-10 sm:mb-14"
           >
             <div className="text-xs font-semibold text-[#5550BA] uppercase tracking-widest mb-4">Built for nonprofit programs</div>
-            <p className="text-[#4A5068] text-base font-light max-w-lg leading-relaxed">
-              Pre-built outcome frameworks for every major nonprofit sector — no setup from scratch, no external consultant, no PhD required.
-            </p>
+            <h2 className="font-display text-3xl sm:text-4xl text-[#211E62] leading-tight max-w-lg">
+              Works for the programs<br />
+              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">your organization</span> already runs
+            </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

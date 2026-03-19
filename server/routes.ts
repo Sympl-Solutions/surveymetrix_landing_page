@@ -4,18 +4,20 @@ import { storage } from "./storage";
 import { insertWaitlistSchema } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
-import { appendWaitlistRow, updatePledgeStatus, ensureSheetHeaders } from "./googleSheets";
+import { appendWaitlistRow, updatePledgeStatusByEmail, ensureSheetHeaders } from "./googleSheets";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
+
+const hasDatabase = !!process.env.DATABASE_URL;
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
 
-  // Ensure Google Sheet headers are written on startup (safe no-op if already present)
+  // Write column headers to the sheet on startup (safe no-op if already present)
   const sheetId = process.env.GOOGLE_SHEET_ID;
   if (sheetId) {
     ensureSheetHeaders(sheetId).catch((e) =>
@@ -28,23 +30,39 @@ export async function registerRoutes(
     try {
       const parsed = insertWaitlistSchema.parse(req.body);
 
-      const existing = await storage.getWaitlistByEmail(parsed.email);
-      if (existing) {
-        return res.status(200).json({
-          message: "You're already on the waitlist!",
-          alreadyExists: true,
-          entry: existing,
-        });
+      // Duplicate check — use DB if available, otherwise skip (Sheets handles deduplication visually)
+      if (hasDatabase) {
+        const existing = await storage.getWaitlistByEmail(parsed.email);
+        if (existing) {
+          return res.status(200).json({
+            message: "You're already on the waitlist!",
+            alreadyExists: true,
+            entry: existing,
+          });
+        }
       }
 
-      const entry = await storage.addToWaitlist(parsed);
+      // Write to DB (if available)
+      let entry: any = null;
+      if (hasDatabase) {
+        entry = await storage.addToWaitlist(parsed);
+      }
 
-      // Sync to Google Sheets (non-blocking — never fails the API response)
-      appendWaitlistRow(entry).catch((e) =>
-        console.warn("[Sheets] Append failed:", e.message)
-      );
+      // Write to Google Sheets (primary when no DB, secondary when DB present)
+      appendWaitlistRow({
+        id: entry?.id ?? null,
+        name: parsed.name ?? null,
+        email: parsed.email,
+        organization: parsed.organization ?? null,
+        sector: parsed.sector ?? null,
+        pledged: false,
+        createdAt: new Date(),
+      }).catch((e) => console.warn("[Sheets] Append failed:", e.message));
 
-      return res.status(201).json({ message: "You're on the waitlist!", entry });
+      return res.status(201).json({
+        message: "You're on the waitlist!",
+        entry: entry ?? { email: parsed.email },
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Please enter a valid email address." });
@@ -58,8 +76,8 @@ export async function registerRoutes(
   app.post("/api/create-pledge-session", async (req, res) => {
     try {
       const { waitlistId, email } = req.body;
-      if (!waitlistId || !email) {
-        return res.status(400).json({ message: "Missing required fields." });
+      if (!email) {
+        return res.status(400).json({ message: "Missing email." });
       }
 
       const origin = req.headers.origin || `${req.protocol}://${req.get("host")}`;
@@ -81,7 +99,11 @@ export async function registerRoutes(
         ],
         mode: "payment",
         customer_email: email,
-        metadata: { waitlistId: String(waitlistId) },
+        // Store both email and waitlistId in metadata for webhook
+        metadata: {
+          email,
+          waitlistId: waitlistId ? String(waitlistId) : "",
+        },
         success_url: `${origin}/?pledge=success`,
         cancel_url: `${origin}/?pledge=cancelled`,
       });
@@ -94,7 +116,7 @@ export async function registerRoutes(
   });
 
   // ── Stripe Webhook ───────────────────────────────────────────────────────────
-  // Marks pledged=true in DB and updates Google Sheet after successful payment
+  // On successful payment: marks pledged in DB (if available) and updates Google Sheet
   app.post("/api/stripe-webhook", async (req, res) => {
     const sig = req.headers["stripe-signature"];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -105,7 +127,6 @@ export async function registerRoutes(
       if (webhookSecret && sig) {
         event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
       } else {
-        // Dev fallback — no signature verification (only safe without webhookSecret set)
         event = req.body as Stripe.Event;
       }
     } catch (err) {
@@ -115,15 +136,17 @@ export async function registerRoutes(
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
+      const email = session.metadata?.email || session.customer_email || "";
       const waitlistId = session.metadata?.waitlistId;
-      const email = session.customer_email ?? "";
 
-      if (waitlistId) {
-        // Update DB
+      // Update DB (if available)
+      if (hasDatabase && waitlistId) {
         await storage.markAsPledged(Number(waitlistId));
+      }
 
-        // Update Google Sheet (non-blocking)
-        updatePledgeStatus(Number(waitlistId), email).catch((e) =>
+      // Update Google Sheet by email (works on both Replit and Vercel)
+      if (email) {
+        updatePledgeStatusByEmail(email).catch((e) =>
           console.warn("[Sheets] Pledge update failed:", e.message)
         );
       }

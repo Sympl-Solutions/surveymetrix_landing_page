@@ -57,7 +57,6 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const [otherSector, setOtherSector] = useState("");
   const [step, setStep] = useState<"form" | "pledge">("form");
   const [message, setMessage] = useState("");
-  const [waitlistId, setWaitlistId] = useState<number | null>(null);
   const [pledgeLoading, setPledgeLoading] = useState(false);
 
   const mutation = useMutation({
@@ -133,7 +132,6 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         setOtherSector("");
         setStep("form");
         setMessage("");
-        setWaitlistId(null);
         setPledgeLoading(false);
         mutation.reset();
       }, 300);
@@ -320,7 +318,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <button
                   onClick={handlePledge}
-                  disabled={pledgeLoading || !waitlistId}
+                  disabled={pledgeLoading}
                   data-testid="button-pledge"
                   className="w-full bg-[#B86890] text-white font-bold py-3 rounded-xl hover:bg-[#9E4A74] transition-all flex items-center justify-center gap-2 shadow-md shadow-[#B86890]/20 group text-sm disabled:opacity-60"
                 >

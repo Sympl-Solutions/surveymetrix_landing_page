@@ -70,7 +70,9 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Missing email." });
       }
 
-      const origin = req.headers.origin || `${req.protocol}://${req.get("host")}`;
+      const origin = process.env.NODE_ENV === "production"
+        ? "https://surveymetrix.com"
+        : `${req.protocol}://${req.get("host")}`;
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],

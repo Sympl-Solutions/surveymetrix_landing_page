@@ -368,7 +368,7 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
   }, []);
 
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col relative">
+    <div className="w-full h-full overflow-hidden flex flex-col relative text-left">
       {/* Header */}
       <div className="px-4 pt-4 pb-2 flex items-center justify-between z-10">
         <div>
@@ -382,16 +382,25 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
         )}
       </div>
 
-      {/* Filter pills */}
+      {/* Category chips */}
       {phase >= 1 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-2 flex gap-1.5 flex-wrap">
-          {["All Outcomes 29", "Workforce Dev. 7", "Youth Dev. 7"].map((tag, i) => (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-2 flex gap-1 flex-wrap">
+          {[
+            "All Outcomes",
+            "Workforce Development",
+            "Youth Development",
+            "Arts & Culture",
+            "Community Health",
+            "Human Services",
+            "Environment",
+            "Mental Health",
+          ].map((tag, i) => (
             <motion.span
               key={tag}
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 3 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.12 }}
-              className={`text-[9px] font-semibold px-2 py-1 rounded-full border ${i === 0 ? 'bg-[#5550BA] text-white border-[#5550BA]' : 'bg-white text-[#4A5068] border-gray-200'}`}
+              transition={{ delay: i * 0.07 }}
+              className={`text-[8px] font-semibold px-2 py-0.5 rounded-full border ${i === 0 ? 'bg-[#5550BA] text-white border-[#5550BA]' : 'bg-white text-[#4A5068] border-gray-200'}`}
             >
               {tag}
             </motion.span>
@@ -411,7 +420,7 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1, duration: 0.35 }}
-                    className={`bg-white border rounded-xl p-2.5 flex flex-col transition-all relative ${isAdded ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20 shadow-sm' : 'border-gray-200'}`}
+                    className={`bg-white border rounded-xl p-2.5 flex flex-col items-start text-left transition-all relative ${isAdded ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20 shadow-sm' : 'border-gray-200'}`}
                   >
                     {/* Add / check button top-right */}
                     {phase >= 2 && (
@@ -428,10 +437,10 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
                       </motion.div>
                     )}
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base mb-2 ${isAdded ? 'bg-[#EEEDfb]' : 'bg-gray-50'}`}>{o.emoji}</div>
-                    <div className={`text-[10px] font-bold leading-tight mb-1 pr-5 ${isAdded ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
-                    <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4">{o.desc}</div>
+                    <div className={`text-[10px] font-bold leading-tight mb-1 pr-5 w-full ${isAdded ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
+                    <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4 w-full">{o.desc}</div>
                     {isAdded && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:block text-[8px] text-[#6A7290] italic mt-1.5 leading-snug border-t border-[#EEEDfb] pt-1.5">"{o.q}"</motion.div>
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:block text-[8px] text-[#6A7290] italic mt-1.5 leading-snug border-t border-[#EEEDfb] pt-1.5 w-full">"{o.q}"</motion.div>
                     )}
                     <div className="flex items-center gap-1 mt-1.5 flex-wrap">
                       <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 py-0.5 rounded font-medium">{o.type}</span>
@@ -452,11 +461,11 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + i * 0.1 }}
-              className="bg-white border border-gray-200 rounded-xl p-2.5 flex flex-col"
+              className="bg-white border border-gray-200 rounded-xl p-2.5 flex flex-col items-start text-left"
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base mb-2 bg-gray-50">{o.emoji}</div>
-              <div className="text-[10px] font-bold leading-tight mb-1 text-[#211E62]">{o.name}</div>
-              <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4">{o.desc}</div>
+              <div className="text-[10px] font-bold leading-tight mb-1 text-[#211E62] w-full">{o.name}</div>
+              <div className="text-[8px] text-[#6A7290] leading-snug flex-1 line-clamp-2 sm:line-clamp-4 w-full">{o.desc}</div>
               <div className="flex items-center gap-1 mt-1.5 flex-wrap">
                 <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 py-0.5 rounded font-medium">{o.type}</span>
                 <span className="text-[7px] text-[#5550BA] bg-[#EEEDfb] px-1 py-0.5 rounded font-medium">{o.tag}</span>
@@ -485,170 +494,249 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
 
 const Step2 = ({ onComplete }: { onComplete?: () => void }) => {
   const [phase, setPhase] = useState(0);
-  const [added, setAdded] = useState<number[]>([]);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
   const [editing, setEditing] = useState(false);
   const [editDone, setEditDone] = useState(false);
+  const [editTargetName, setEditTargetName] = useState("Job Search Confidence");
+  const editQRef = useRef<HTMLDivElement>(null);
 
-  const libraryOutcomes = [
-    { emoji: "📋", name: "Job Retention at 6 Months",   q: "Are you currently employed at the same job you had 6 months ago?",             type: "Yes / No", tag: "WIOA"   },
-    { emoji: "💡", name: "Financial Literacy",           q: "How well do you feel you understand budgeting and managing your finances?",      type: "Likert",   tag: "SDOH"   },
-    { emoji: "🔍", name: "Job Search Confidence",        q: "How confident do you feel about finding a new job right now?", qEdited: "How confident do you feel about finding work in digital marketing right now?", type: "Likert", tag: "Custom" },
-    { emoji: "🌱", name: "Mental Wellbeing",             q: "Over the past two weeks, how often have you felt calm and at ease?",            type: "Likert",   tag: "WHO-5"  },
-    { emoji: "🏆", name: "Credential Attainment",        q: "Have you obtained a new professional credential since starting the program?",   type: "Yes / No", tag: "WIOA"   },
-    { emoji: "🤝", name: "Community Belonging",          q: "How strongly do you feel you belong to your local community?",                  type: "Likert",   tag: "CASEL"  },
+  // Unified library — first 3 are pre-selected from Step 1, rest are available to add
+  const library = [
+    { emoji: "💰", name: "Wage Growth & Earnings",     q: "How much has your income improved since joining this program?",       qEdited: "How much has your income improved since joining Employment Readiness?", type: "Likert",   tag: "WIOA",   isPre: true  },
+    { emoji: "📋", name: "Job Retention at 6 Months",  q: "Are you currently employed at the same job you had 6 months ago?",  qEdited: "Are you still in the same role you held 6 months after completing Employment Readiness?", type: "Yes / No", tag: "WIOA",   isPre: true  },
+    { emoji: "💛", name: "Empathy & Social Awareness", q: "How often do you try to understand things from another person's point of view?",                                                                          type: "Likert",   tag: "CASEL",  isPre: true  },
+    { emoji: "🔍", name: "Job Search Confidence",      q: "How confident do you feel about finding a new job right now?",       qEdited: "How confident do you feel about finding work in digital marketing right now?", type: "Likert",   tag: "Custom", isPre: false },
+    { emoji: "💡", name: "Financial Literacy",         q: "How well do you understand budgeting and managing your finances?",                                                                                        type: "Likert",   tag: "SDOH",   isPre: false },
+    { emoji: "🏆", name: "Credential Attainment",      q: "Have you obtained a new credential since starting the program?",                                                                                         type: "Yes / No", tag: "WIOA",   isPre: false },
+    { emoji: "🌱", name: "Mental Wellbeing",           q: "Over the past two weeks, how often have you felt calm and at ease?",                                                                                      type: "Likert",   tag: "WHO-5",  isPre: false },
+    { emoji: "🤝", name: "Community Belonging",        q: "How strongly do you feel you belong to your local community?",                                                                                           type: "Likert",   tag: "CASEL",  isPre: false },
   ];
 
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase(1), 800),            // all 6 library items appear
-      setTimeout(() => setPhase(2), 2200),           // cursor → program dropdown (opens)
-      setTimeout(() => setPhase(3), 3800),           // program selected
-      setTimeout(() => setAdded([0]), 5000),         // select outcome #1 (Job Retention)
-      setTimeout(() => setAdded([0, 2]), 6400),      // select outcome #3 (Job Search Confidence) — skips #2
-      setTimeout(() => setAdded([0, 2, 4]), 7800),   // select outcome #5 (Credential Attainment) — skips #4
-      setTimeout(() => setEditing(true), 9400),      // start editing Q2 (Job Search Confidence)
-      setTimeout(() => { setEditDone(true); setEditing(false); }, 11200), // edit done
-      setTimeout(() => onComplete?.(), 14000),
-    ];
-    return () => timers.forEach(clearTimeout);
+    const isMobile = window.innerWidth < 640;
+
+    if (isMobile) {
+      // ── Mobile: simplified flow — questions pre-loaded, assign program, personalise ──
+      setEditTargetName("Job Retention at 6 Months");
+      const timers = [
+        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 500),
+        setTimeout(() => setPhase(2), 1800),   // dropdown opens
+        setTimeout(() => setPhase(3), 3000),   // Employment Readiness selected
+        setTimeout(() => setEditing(true), 4300),  // personalise Wage Growth
+        setTimeout(() => { setEditDone(true); setEditing(false); }, 6000),
+        setTimeout(() => setPhase(4), 6800),   // success
+        setTimeout(() => onComplete?.(), 9500),
+      ];
+      return () => timers.forEach(clearTimeout);
+    } else {
+      // ── Desktop: full flow — library panel visible, cursor picks from library ──
+      setEditTargetName("Job Retention at 6 Months");
+      const timers = [
+        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 700),
+        setTimeout(() => setPhase(2), 2200),
+        setTimeout(() => setPhase(3), 3600),
+        setTimeout(() => setSelected(new Set([0, 1, 2, 3])), 4800),
+        setTimeout(() => setSelected(new Set([0, 1, 2, 3, 5])), 6300),
+        setTimeout(() => setEditing(true), 7800),
+        setTimeout(() => { setEditDone(true); setEditing(false); }, 9600),
+        setTimeout(() => setPhase(4), 10400),
+        setTimeout(() => onComplete?.(), 13500),
+      ];
+      return () => timers.forEach(clearTimeout);
+    }
   }, []);
 
-  const allPrograms = ["Employment Readiness", "Digital Skills", "Youth Leadership"];
+  // Auto-scroll to the question being edited
+  useEffect(() => {
+    if (editing && editQRef.current) {
+      editQRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [editing]);
 
-  // phase: 0=idle, 1=library shown, 2=cursor goes to program dropdown, 3=program selected, 4=outcomes added, 5=editing, 6=edit done+3rd outcome, 7=done
+  const surveyItems = Array.from(selected)
+    .sort((a, b) => a - b)
+    .map(idx => library[idx]);
+
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col sm:flex-row relative">
-      {/* Left: outcome library — capped height on mobile, fixed width on desktop */}
-      <div className="h-[42%] sm:h-auto sm:w-[38%] border-b sm:border-b-0 sm:border-r border-gray-100 flex flex-col bg-gray-50/50 overflow-hidden">
-        <div className="px-2 pt-2 pb-1 shrink-0">
-          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-widest mb-1">Outcome Library</div>
-          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg px-2 py-0.5">
-            <Search size={9} className="text-gray-400 shrink-0" />
-            <span className="text-[9px] text-gray-400">Search outcomes...</span>
+    <div className="w-full h-full overflow-hidden flex flex-col sm:flex-row relative pointer-events-none select-none">
+
+      {/* ── Left panel: Outcome Library — hidden on mobile, always visible on desktop ── */}
+      <div className="hidden sm:flex sm:w-[42%] sm:border-r flex-col bg-gray-50/60 overflow-hidden border-gray-100">
+
+        {/* Header */}
+        <div className="px-2.5 pt-2.5 pb-1.5 border-b border-gray-100 shrink-0">
+          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-widest mb-1.5">Outcome Library</div>
+          <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-2 py-1">
+            <Search size={8} className="text-gray-400 shrink-0" />
+            <span className="text-[8.5px] text-gray-400">Search outcomes...</span>
           </div>
         </div>
 
-        <div className="px-2 pb-1 space-y-1 flex-1 overflow-y-auto">
-          {phase >= 1 && libraryOutcomes.map((o, i) => {
-            const isAdded = added.includes(i);
-            return (
-              <motion.div
-                key={o.name}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className={`flex items-center gap-1.5 rounded-lg px-2 py-1 border transition-all ${isAdded ? 'bg-[#EEEDfb] border-[#5550BA]/40' : 'bg-white border-gray-200'}`}
-              >
-                <span className="text-[11px] shrink-0">{o.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <div className={`text-[9px] font-semibold truncate ${isAdded ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
-                  <div className="hidden sm:flex gap-1 mt-0.5">
-                    <span className="text-[7px] text-[#5550BA] bg-[#EEEDfb] px-1 rounded">{o.tag}</span>
-                    <span className="text-[7px] text-[#6A7290] bg-gray-100 px-1 rounded">{o.type}</span>
+        {/* "Pre-selected" label */}
+        {phase >= 1 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-2.5 pt-1.5 pb-0.5 shrink-0 flex items-center gap-1.5">
+            <span className="text-[7px] font-semibold text-[#5550BA] uppercase tracking-wide">From Step 1</span>
+            <div className="flex-1 h-px bg-[#DAD8F6]" />
+            <span className="text-[7px] text-[#948EDE]">{Array.from(selected).filter(i => library[i].isPre).length} selected</span>
+          </motion.div>
+        )}
+
+        {/* 2-column grid */}
+        <div className="px-2.5 pb-2 flex-1 overflow-y-auto">
+          <div className="grid grid-cols-2 gap-1.5 pt-1">
+            {phase >= 1 && library.map((o, i) => {
+              const isSel = selected.has(i);
+              return (
+                <motion.div
+                  key={o.name}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  className={`rounded-xl p-2 border flex flex-col items-start text-left gap-1 transition-all duration-300 ${
+                    isSel
+                      ? o.isPre
+                        ? 'bg-[#EEEDfb] border-[#5550BA]/30 shadow-sm'
+                        : 'bg-[#EEEDfb] border-[#5550BA]/40 shadow-sm'
+                      : 'bg-white border-gray-200'
+                  }`}
+                >
+                  <div className="w-full flex items-start justify-between gap-0.5">
+                    <span className="text-[12px] leading-none">{o.emoji}</span>
+                    {isSel ? (
+                      <div className="w-4 h-4 rounded-full bg-[#5550BA] flex items-center justify-center shrink-0 mt-0.5">
+                        <CheckCircle2 size={9} className="text-white" />
+                      </div>
+                    ) : (
+                      <div className="w-4 h-4 rounded-full border border-gray-200 flex items-center justify-center shrink-0 mt-0.5">
+                        <Plus size={8} className="text-gray-300" />
+                      </div>
+                    )}
                   </div>
-                </div>
-                {isAdded ? <CheckCircle2 size={10} className="text-[#5550BA] shrink-0" /> : <Plus size={10} className="text-gray-400 shrink-0" />}
-              </motion.div>
-            );
-          })}
+                  <div className={`text-[7.5px] font-semibold leading-tight w-full ${isSel ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{o.name}</div>
+                  <div className="flex gap-1 flex-wrap">
+                    <span className={`text-[6px] px-1 py-0.5 rounded font-medium ${isSel ? 'text-[#5550BA] bg-[#DAD8F6]' : 'text-[#5550BA] bg-[#EEEDfb]'}`}>{o.tag}</span>
+                    <span className="text-[6px] text-[#6A7290] bg-gray-100 px-1 py-0.5 rounded font-medium">{o.type}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Right: program selector at top, then survey questions */}
-      <div className="flex-1 flex flex-col">
-        {/* Program selector — cursor goes here first */}
-        <div className="px-2.5 pt-2.5 pb-2 border-b border-gray-100 relative">
-          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-wide mb-1.5">Link Survey to Program</div>
-          <div className={`flex items-center justify-between bg-white border rounded-lg px-2.5 py-1.5 cursor-pointer transition-all ${phase >= 2 ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20' : 'border-gray-200'}`}>
+      {/* ── Right panel: Survey Builder — always visible ── */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+
+        {/* Program selector */}
+        <div className="px-2.5 pt-2.5 pb-2 border-b border-gray-100 shrink-0 relative">
+          <div className="text-[8px] font-bold text-[#6A7290] uppercase tracking-widest mb-1.5">Survey Builder</div>
+          <div className={`flex items-center justify-between rounded-lg px-2 py-1.5 border cursor-pointer transition-all ${phase >= 2 && phase < 3 ? 'border-[#5550BA] ring-1 ring-[#5550BA]/20 bg-white' : phase >= 3 ? 'bg-[#EEEDfb] border-[#5550BA]/20' : 'bg-white border-gray-200'}`}>
             {phase >= 3 ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 min-w-0">
-                {/* Program tile badge */}
-                <div className="flex items-center gap-1.5 bg-[#EEEDfb] border border-[#5550BA]/20 rounded-md px-2 py-1 min-w-0">
-                  <div className="w-4 h-4 rounded bg-[#5550BA] flex items-center justify-center shrink-0">
-                    <span className="text-[7px] font-bold text-white">ER</span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-[9px] font-bold text-[#211E62] leading-none">Employment Readiness</div>
-                    <div className="text-[7px] text-[#6A7290] leading-none mt-0.5">Workforce Program · Active</div>
-                  </div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5 min-w-0 flex-1">
+                <div className="w-5 h-5 rounded-md bg-[#5550BA] flex items-center justify-center shrink-0">
+                  <span className="text-[7px] font-bold text-white">ER</span>
                 </div>
-                <span className="text-[7px] text-[#9DA4BC] shrink-0">{added.length} q.</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] font-bold text-[#211E62] leading-none">Employment Readiness</div>
+                  <div className="text-[7px] text-[#6A7290] mt-0.5">Workforce Program · Active</div>
+                </div>
+                <motion.span key={surveyItems.length} initial={{ scale: 1.25 }} animate={{ scale: 1 }} className="text-[7.5px] font-bold text-[#5550BA] bg-white border border-[#5550BA]/20 rounded px-1.5 py-0.5 shrink-0">{surveyItems.length}q</motion.span>
               </motion.div>
             ) : (
               <span className="text-[9px] text-[#9DA4BC]">Select a program...</span>
             )}
             <ChevronDown size={10} className="text-[#9DA4BC] shrink-0 ml-1" />
           </div>
-          {/* Dropdown options shown at phase 2 */}
+          {/* Dropdown */}
           {phase === 2 && (
-            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="absolute left-2.5 right-2.5 top-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-30">
-              {allPrograms.map((p, i) => {
-                const initials = p.split(" ").map(w => w[0]).join("").slice(0, 2);
-                const colors = ["#5550BA", "rgb(168,85,247)", "#B86890"];
-                const subtitles = ["Workforce Program", "Digital Training", "Youth Leadership"];
-                return (
-                  <div key={p} className={`flex items-center gap-2 px-2.5 py-1.5 border-b last:border-b-0 border-gray-100 ${i === 0 ? 'bg-[#EEEDfb]' : 'hover:bg-gray-50'}`}>
-                    <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: colors[i] }}>
-                      <span className="text-[7px] font-bold text-white">{initials}</span>
-                    </div>
-                    <div>
-                      <div className={`text-[9px] font-semibold ${i === 0 ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{p}</div>
-                      <div className="text-[7px] text-[#9DA4BC]">{subtitles[i]}</div>
-                    </div>
-                    {i === 0 && <CheckCircle2 size={10} className="text-[#5550BA] ml-auto" />}
+            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="absolute left-2.5 right-2.5 top-full mt-0.5 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-30">
+              {[
+                { initials: "ER", name: "Employment Readiness", sub: "Workforce Program", color: "#5550BA", active: true },
+                { initials: "DS", name: "Digital Skills",       sub: "Digital Training",  color: "rgb(168,85,247)", active: false },
+                { initials: "YL", name: "Youth Leadership",     sub: "Youth Program",     color: "#B86890", active: false },
+              ].map((p, i) => (
+                <div key={p.name} className={`flex items-center gap-2 px-2.5 py-1.5 border-b last:border-0 border-gray-100 ${p.active ? 'bg-[#EEEDfb]' : ''}`}>
+                  <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: p.color }}>
+                    <span className="text-[7px] font-bold text-white">{p.initials}</span>
                   </div>
-                );
-              })}
+                  <div className="flex-1">
+                    <div className={`text-[9px] font-semibold ${p.active ? 'text-[#5550BA]' : 'text-[#211E62]'}`}>{p.name}</div>
+                    <div className="text-[7px] text-[#9DA4BC]">{p.sub}</div>
+                  </div>
+                  {p.active && <CheckCircle2 size={10} className="text-[#5550BA]" />}
+                </div>
+              ))}
             </motion.div>
           )}
         </div>
 
-        <div className="flex-1 px-2 py-2 overflow-hidden space-y-1.5">
+        {/* Survey questions */}
+        <div className="flex-1 px-2.5 py-2 overflow-y-auto space-y-1.5">
+
+          {/* Section header — auto-added from Step 1 */}
+          {phase >= 1 && (
+            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5 pb-0.5">
+              <div className="flex items-center gap-1 bg-[#EEEDfb] border border-[#DAD8F6] rounded-lg px-1.5 py-0.5 shrink-0">
+                <span className="text-[6px] font-bold text-[#5550BA] uppercase tracking-wide">Step 1 Outcomes</span>
+                <span className="text-[6px] text-[#948EDE]">· Auto-added</span>
+              </div>
+              <div className="flex-1 h-px bg-[#DAD8F6]" />
+              <span className="text-[6.5px] text-[#948EDE] shrink-0">{Array.from(selected).filter(i => library[i].isPre).length}q</span>
+            </motion.div>
+          )}
+
           <AnimatePresence>
-            {added.map((idx, surveyPos) => {
-              const o = libraryOutcomes[idx];
-              const isThisEditing = editing && idx === 2;
-              const isThisDone = editDone && idx === 2;
-              const questionText = isThisDone ? o.qEdited! : o.q;
+            {surveyItems.map((o, pos) => {
+              const isThisEditing = editing && o.name === editTargetName;
+              const isThisDone    = editDone && o.name === editTargetName;
+              const qText = isThisDone && (o as any).qEdited ? (o as any).qEdited : o.q;
               return (
                 <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  key={o.name}
+                  ref={isThisEditing || isThisDone ? editQRef : undefined}
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                  className={`bg-white border rounded-lg px-2 py-1.5 shadow-sm ${isThisEditing ? 'border-[#B86890] ring-1 ring-[#B86890]/20' : isThisDone ? 'border-[#B86890]/40' : 'border-[#5550BA]/25'}`}
+                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                  className={`bg-white rounded-xl border px-2.5 py-2 shadow-sm transition-all ${
+                    isThisEditing ? 'border-[#B86890] ring-1 ring-[#B86890]/20'
+                    : isThisDone  ? 'border-[#B86890]/40'
+                    : o.isPre     ? 'border-[#DAD8F6]'
+                    :               'border-[#5550BA]/30'
+                  }`}
                 >
-                  {/* Top row: number badge + type + name + status */}
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="w-4 h-4 rounded bg-[#EEEDfb] text-[#5550BA] text-[7px] font-bold flex items-center justify-center shrink-0">{surveyPos + 1}</span>
-                    <span className="text-[7px] font-semibold text-white bg-[#5550BA] px-1 py-0.5 rounded shrink-0">{o.type}</span>
-                    <span className="text-[8px] text-[#6A7290] truncate flex-1">{o.name}</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="w-4 h-4 rounded-md bg-[#EEEDfb] text-[#5550BA] text-[7px] font-bold flex items-center justify-center shrink-0">{pos + 1}</span>
+                    <span className={`text-[6.5px] font-bold px-1.5 py-0.5 rounded shrink-0 ${o.isPre ? 'bg-[#DAD8F6] text-[#5550BA]' : 'bg-[#5550BA] text-white'}`}>{o.type}</span>
+                    <span className="text-[7.5px] text-[#6A7290] truncate flex-1">{o.name}</span>
+                    {o.isPre && !isThisEditing && !isThisDone && (
+                      <span className="text-[6px] text-[#948EDE] bg-[#EEEDfb] border border-[#DAD8F6] px-1 py-0.5 rounded shrink-0 font-medium">Step 1</span>
+                    )}
                     {isThisEditing && (
-                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[7px] text-[#B86890] font-medium shrink-0">
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[6.5px] text-[#B86890] font-semibold shrink-0">
                         <PenTool size={7} /> Editing
                       </motion.span>
                     )}
                     {isThisDone && (
-                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[7px] text-[#B86890] font-medium shrink-0">
-                        <CheckCircle2 size={7} /> Personalised
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-0.5 text-[6.5px] text-[#B86890] font-semibold shrink-0">
+                        <CheckCircle2 size={7} className="text-[#B86890]" /> Personalised
                       </motion.span>
                     )}
                   </div>
-                  {/* Question text */}
-                  <div className={`text-[9px] leading-snug mb-1 ${isThisEditing ? 'text-[#B86890] font-medium' : 'text-[#211E62]'}`}>
-                    {questionText}
-                    {isThisEditing && <motion.span animate={{ opacity: [1,0,1] }} transition={{ repeat: Infinity, duration: 0.7 }} className="inline-block w-0.5 h-2.5 bg-[#B86890] ml-0.5 align-middle" />}
+                  <div className={`text-[8.5px] leading-snug mb-1.5 ${isThisEditing ? 'text-[#B86890] font-medium' : 'text-[#211E62]'}`}>
+                    {qText}
+                    {isThisEditing && (
+                      <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.65 }} className="inline-block w-0.5 h-2.5 bg-[#B86890] ml-0.5 align-middle" />
+                    )}
                   </div>
-                  {/* Compact input preview */}
                   {o.type === "Yes / No" ? (
-                    <div className="flex gap-1">
-                      <div className="flex-1 text-center text-[7px] font-semibold border border-gray-200 rounded py-0.5 text-[#211E62] bg-gray-50">Yes</div>
-                      <div className="flex-1 text-center text-[7px] font-semibold border border-gray-200 rounded py-0.5 text-[#211E62] bg-gray-50">No</div>
+                    <div className="flex gap-1.5">
+                      <div className="flex-1 text-center text-[8px] font-bold border border-green-200 rounded-lg py-1.5 text-green-700 bg-green-50">✓ Yes</div>
+                      <div className="flex-1 text-center text-[8px] font-bold border border-rose-200 rounded-lg py-1.5 text-rose-600 bg-rose-50">✗ No</div>
                     </div>
                   ) : (
                     <div className="flex gap-0.5">
-                      {[1,2,3,4,5].map(n => (
-                        <div key={n} className="flex-1 text-center text-[7px] border border-gray-200 rounded py-0.5 text-[#9DA4BC] bg-gray-50">{n}</div>
+                      {["1","2","3","4","5"].map(n => (
+                        <div key={n} className="flex-1 text-center text-[7px] border border-gray-200 rounded-lg py-1 text-[#9DA4BC] bg-gray-50">{n}</div>
                       ))}
                     </div>
                   )}
@@ -657,40 +745,34 @@ const Step2 = ({ onComplete }: { onComplete?: () => void }) => {
             })}
           </AnimatePresence>
 
-          {added.length === 0 && phase >= 1 && (
-            <motion.div animate={{ opacity: [0.4, 0.75, 0.4] }} transition={{ repeat: Infinity, duration: 2 }} className="border-2 border-dashed border-[#DAD8F6] rounded-xl h-14 flex items-center justify-center">
-              <span className="text-[9px] text-[#5550BA] font-medium">Click an outcome to add →</span>
-            </motion.div>
-          )}
-          {editDone && (
-            <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-green-50 border border-green-200 rounded-lg py-1.5 px-2 flex items-center gap-1.5">
-              <CheckCircle2 size={10} className="text-green-600 shrink-0" />
+          {phase >= 4 && (
+            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="bg-green-50 border border-green-200 rounded-xl py-2 px-2.5 flex items-center gap-2">
+              <CheckCircle2 size={11} className="text-green-600 shrink-0" />
               <div>
-                <div className="text-[8px] font-bold text-green-700">Survey ready · 3 questions linked</div>
-                <div className="text-[7px] text-green-600">Employment Readiness Program · Active</div>
+                <div className="text-[8px] font-bold text-green-700">Survey ready · {surveyItems.length} questions linked</div>
+                <div className="text-[7px] text-green-600">Employment Readiness · Active</div>
               </div>
             </motion.div>
           )}
         </div>
       </div>
 
-      {/* Cursor — idle → dropdown → item[0] → item[2] → item[4] → edit Q2 */}
-      <motion.div className="absolute z-30 pointer-events-none" animate={{
-        left: phase < 2 ? '19%'
-            : phase < 3 ? '72%'
-            : added.length === 0 ? '18%'
-            : added.length === 1 ? '18%'
-            : added.length === 2 ? '18%'
-            : editing ? '78%'
-            : '78%',
-        top:  phase < 2 ? '52%'
-            : phase < 3 ? '21%'
-            : added.length === 0 ? '38%'   // row 0 of 6
-            : added.length === 1 ? '56%'   // row 2 of 6
-            : added.length === 2 ? '72%'   // row 4 of 6
-            : editing ? '58%'
-            : '58%',
-      }} transition={{ duration: 0.6, ease: "easeInOut" }}>
+      {/* Cursor — desktop only: library → dropdown → library picks → edit question */}
+      <motion.div className="hidden sm:block absolute z-30 pointer-events-none" animate={{
+        left: phase < 2 ? '30%'     // hovering over library col2
+            : phase < 3 ? '75%'     // moving to program dropdown
+            : !selected.has(3) ? '30%'  // back to library: pick idx3 (col2 row2)
+            : !selected.has(5) ? '30%'  // pick idx5 (col2 row3)
+            : editing || editDone ? '78%'  // move to question card (right panel)
+            : '30%',
+        top:  phase < 2 ? '55%'
+            : phase < 3 ? '22%'
+            : !selected.has(3) ? '52%'   // row2 center in grid
+            : !selected.has(5) ? '68%'   // row3 center in grid
+            : editing || editDone ? '62%'
+            : '68%',
+      }} transition={{ duration: 0.65, ease: "easeInOut" }}>
         <svg width="14" height="18" viewBox="0 0 20 24" fill="none"><path d="M1 1L1 17.5L5.5 13.5L9 21L12 19.5L8.5 12H14.5L1 1Z" fill="#211E62" stroke="white" strokeWidth="1.5"/></svg>
       </motion.div>
     </div>
@@ -718,9 +800,10 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
   ];
 
   const stats = [
-    { label: "Job Confidence", value: "76", unit: "%", change: "+18%", from: "58% → 76%", color: "#5550BA", delay: 0.15 },
-    { label: "Job Retention", value: "81", unit: "%", change: "+9%", from: "72% → 81%", color: "rgb(168,85,247)", delay: 0.3 },
-    { label: "Wellbeing Score", value: "3.9", unit: "/5", change: "+0.7", from: "3.2 → 3.9", color: "#B86890", delay: 0.45 },
+    { label: "Total Responses", value: "342",  unit: "",   change: "+18%", from: "290 → 342", color: "#5550BA",          delay: 0.1  },
+    { label: "Avg KPI Score",   value: "3.8",  unit: "/5", change: "+0.6", from: "3.2 → 3.8", color: "rgb(168,85,247)", delay: 0.2  },
+    { label: "Job Confidence",  value: "76",   unit: "%",  change: "+18%", from: "58% → 76%", color: "#5550BA",          delay: 0.3  },
+    { label: "Wellbeing Score", value: "3.9",  unit: "/5", change: "+0.7", from: "3.2 → 3.9", color: "#B86890",          delay: 0.42 },
   ];
 
   // Empathy & Social Awareness — pre/post score as % of 5-point scale
@@ -739,7 +822,7 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col relative bg-[#FAFAFA] overflow-hidden">
+    <div className="w-full h-full flex flex-col relative bg-[#FAFAFA] overflow-hidden text-left">
       {/* Header */}
       <div className="px-3 pt-3 pb-1.5 bg-white border-b border-gray-100">
         <div className="flex items-center justify-between mb-1">
@@ -785,25 +868,25 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
 
       {/* KPI stat cards */}
       <div className="px-2.5 pt-2 pb-1.5">
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-4 gap-1.5">
           {stats.map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-2 relative overflow-hidden">
+            <div key={s.label} className="bg-white rounded-xl border border-gray-100 shadow-sm px-2 pt-2 pb-1.5 relative overflow-hidden flex flex-col">
               <div className="absolute top-0 left-0 w-full h-0.5 rounded-t-xl" style={{ backgroundColor: s.color }} />
-              <div className="text-[7px] text-[#6A7290] font-medium mb-0.5 mt-0.5">{s.label}</div>
+              <div className="text-[6.5px] text-[#6A7290] font-medium mb-0.5 mt-0.5 leading-tight">{s.label}</div>
               {phase >= 2 ? (
-                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: s.delay }}>
-                  <div className="text-base font-bold text-[#211E62] leading-none">
-                    {s.value}<span className="text-[9px] text-[#9DA4BC] font-medium">{s.unit}</span>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: s.delay }} className="flex flex-col flex-1">
+                  <div className="text-[15px] font-bold text-[#211E62] leading-none mb-1">
+                    {s.value}<span className="text-[8px] text-[#9DA4BC] font-medium">{s.unit}</span>
                   </div>
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }}>
-                    <span className="text-[7px] font-bold text-[#B86890] bg-[#FAF0F3] px-1 py-0.5 rounded inline-flex items-center gap-0.5 mt-0.5">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }} className="flex items-center justify-between mt-auto">
+                    <span className="text-[6.5px] font-bold text-[#B86890] bg-[#FAF0F3] px-1 py-0.5 rounded inline-flex items-center gap-0.5">
                       <ArrowUp size={6} />{s.change}
                     </span>
-                    <div className="text-[6px] text-[#9DA4BC] mt-0.5">{s.from} avg.</div>
+                    <span className="text-[6px] text-[#9DA4BC] leading-tight text-right">{s.from}</span>
                   </motion.div>
                 </motion.div>
               ) : (
-                <div className="text-base font-bold text-gray-200">—</div>
+                <div className="text-[15px] font-bold text-gray-200">—</div>
               )}
             </div>
           ))}
@@ -855,11 +938,12 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
             <div className="text-[8px] font-bold text-[#211E62] mb-0.5">Credential Attainment</div>
             <div className="text-[6.5px] text-[#9DA4BC] mb-1.5">Quarterly % · All programs · 2024</div>
 
-            {/* Mini grouped bar chart by quarter */}
-            <div className="flex-1 flex items-end gap-1.5">
+            {/* Mini grouped bar chart by quarter — fills available flex height */}
+            <div className="flex-1 flex gap-1.5 min-h-0">
               {quarterData.map((qd, qi) => (
-                <div key={qd.q} className="flex-1 flex flex-col items-center gap-0.5">
-                  <div className="w-full flex items-end gap-0.5" style={{ height: 44 }}>
+                <div key={qd.q} className="flex-1 flex flex-col min-h-0">
+                  {/* Bar group fills remaining height */}
+                  <div className="flex-1 flex items-end gap-0.5 min-h-0">
                     {[
                       { val: qd.er, color: "#5550BA" },
                       { val: qd.ds, color: "rgb(168,85,247)" },
@@ -867,15 +951,15 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
                     ].map((bar, bi) => (
                       <motion.div
                         key={bi}
-                        className="flex-1 rounded-sm"
-                        style={{ backgroundColor: bar.color }}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${(bar.val / 100) * 44}px` }}
-                        transition={{ delay: 0.3 + qi * 0.12 + bi * 0.05, duration: 0.5, ease: "easeOut" }}
+                        className="flex-1 rounded-t-sm"
+                        style={{ backgroundColor: bar.color, height: `${bar.val}%`, transformOrigin: "bottom" }}
+                        initial={{ scaleY: 0 }}
+                        animate={{ scaleY: 1 }}
+                        transition={{ delay: 0.3 + qi * 0.12 + bi * 0.05, duration: 0.6, ease: "easeOut" }}
                       />
                     ))}
                   </div>
-                  <span className="text-[6px] text-[#9DA4BC]">{qd.q}</span>
+                  <span className="text-[6px] text-[#9DA4BC] text-center pt-0.5 shrink-0">{qd.q}</span>
                 </div>
               ))}
             </div>
@@ -1039,7 +1123,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 bg-[#FDFCFA]" style={{ height: '240px' }}></div>
 
         <div className="relative z-10 pt-8 sm:pt-10 md:pt-14 pb-8 sm:pb-12 px-4 sm:px-6">
-          <div className="max-w-5xl mx-auto text-center">
+          <div className="max-w-5xl lg:max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1094,7 +1178,7 @@ export default function Home() {
             >
               <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#5550BA] via-[#B86890] to-[#948EDE] rounded-t-2xl"></div>
-                <div className="min-h-[420px] sm:min-h-[460px] lg:min-h-[520px] relative p-2 sm:p-3 md:p-6">
+                <div className="min-h-[420px] sm:min-h-[460px] lg:min-h-[460px] relative p-2 sm:p-3 md:p-6 lg:pb-2">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#B86890]/10 rounded-full blur-3xl"></div>
                     <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#EEEDfb] rounded-full blur-3xl"></div>
@@ -1167,12 +1251,18 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                    className="rounded-2xl overflow-hidden shadow-xl"
+                    style={{ borderLeft: "1.5px solid rgba(85,80,186,0.22)", borderRight: "1.5px solid rgba(85,80,186,0.22)", borderBottom: "1.5px solid rgba(85,80,186,0.22)" }}
                   >
+                    <div className="flex items-center gap-1.5 px-4 py-2" style={{ background: "linear-gradient(180deg, rgba(140,134,220,0.58) 0%, rgba(85,80,186,0.42) 100%)", backdropFilter: "blur(20px) saturate(200%)", WebkitBackdropFilter: "blur(20px) saturate(200%)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(33,30,98,0.20)", borderTop: "1px solid rgba(255,255,255,0.45)", borderBottom: "1px solid rgba(85,80,186,0.30)", borderRadius: "0.75rem 0.75rem 0 0" }}>
+                      <div className="w-2 h-2 rounded-full bg-[#FF5F57]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#28C840]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                    </div>
                     <img
                       src="/outcome-library.png"
                       alt="Outcome Library screenshot"
-                      className="w-full h-full object-cover object-top block"
+                      className="w-full h-[316px] sm:h-[354px] object-cover object-top block"
                     />
                   </motion.div>
                 ),
@@ -1190,12 +1280,18 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                    className="rounded-2xl overflow-hidden shadow-xl"
+                    style={{ borderLeft: "1.5px solid rgba(85,80,186,0.22)", borderRight: "1.5px solid rgba(85,80,186,0.22)", borderBottom: "1.5px solid rgba(85,80,186,0.22)" }}
                   >
+                    <div className="flex items-center gap-1.5 px-4 py-2" style={{ background: "linear-gradient(180deg, rgba(140,134,220,0.58) 0%, rgba(85,80,186,0.42) 100%)", backdropFilter: "blur(20px) saturate(200%)", WebkitBackdropFilter: "blur(20px) saturate(200%)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(33,30,98,0.20)", borderTop: "1px solid rgba(255,255,255,0.45)", borderBottom: "1px solid rgba(85,80,186,0.30)", borderRadius: "0.75rem 0.75rem 0 0" }}>
+                      <div className="w-2 h-2 rounded-full bg-[#FF5F57]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#28C840]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                    </div>
                     <img
                       src="/survey-builder.png"
                       alt="Survey builder screenshot"
-                      className="w-full h-full object-cover object-top block"
+                      className="w-full h-[316px] sm:h-[354px] object-cover object-top block"
                     />
                   </motion.div>
                 ),
@@ -1213,12 +1309,18 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="rounded-2xl overflow-hidden shadow-xl border border-[#DAD8F6] h-[340px] sm:h-[380px]"
+                    className="rounded-2xl overflow-hidden shadow-xl"
+                    style={{ borderLeft: "1.5px solid rgba(85,80,186,0.22)", borderRight: "1.5px solid rgba(85,80,186,0.22)", borderBottom: "1.5px solid rgba(85,80,186,0.22)" }}
                   >
+                    <div className="flex items-center gap-1.5 px-4 py-2" style={{ background: "linear-gradient(180deg, rgba(140,134,220,0.58) 0%, rgba(85,80,186,0.42) 100%)", backdropFilter: "blur(20px) saturate(200%)", WebkitBackdropFilter: "blur(20px) saturate(200%)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(33,30,98,0.20)", borderTop: "1px solid rgba(255,255,255,0.45)", borderBottom: "1px solid rgba(85,80,186,0.30)", borderRadius: "0.75rem 0.75rem 0 0" }}>
+                      <div className="w-2 h-2 rounded-full bg-[#FF5F57]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#28C840]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                    </div>
                     <img
                       src="/dashboard.png"
                       alt="Outcome dashboard screenshot"
-                      className="w-full h-full object-cover object-top block"
+                      className="w-full h-[316px] sm:h-[354px] object-cover object-top block"
                     />
                   </motion.div>
                 ),
@@ -1328,10 +1430,10 @@ export default function Home() {
                 tags: ["SDOH", "PRAPARE"],
               },
               {
-                emoji: "🏥",
-                title: "Community Health",
-                desc: "Run SDOH screeners, food security surveys, and social connection assessments — with built-in longitudinal follow-up sequences.",
-                tags: ["PRAPARE", "WHO-5"],
+                emoji: "🌍",
+                title: "Settlement & Immigration",
+                desc: "Track language confidence, social integration, employment readiness, and service navigation for newcomer and refugee support programs.",
+                tags: ["Custom", "IRCC-aligned"],
               },
               {
                 emoji: "🎨",
@@ -1340,10 +1442,10 @@ export default function Home() {
                 tags: ["WHO-5", "UCLA Scale"],
               },
               {
-                emoji: "🌍",
-                title: "Settlement & Immigration",
-                desc: "Track language confidence, social integration, employment readiness, and service navigation for newcomer and refugee support programs.",
-                tags: ["Custom", "IRCC-aligned"],
+                emoji: "🏥",
+                title: "Community Health",
+                desc: "Run SDOH screeners, food security surveys, and social connection assessments — with built-in longitudinal follow-up sequences.",
+                tags: ["PRAPARE", "WHO-5"],
               },
             ].map((sector, i) => (
               <motion.div
@@ -1385,7 +1487,13 @@ export default function Home() {
             </div>
 
             <div className="w-full lg:w-7/12">
-              <div className="bg-white rounded-2xl border border-[#DAD8F6] shadow-lg overflow-hidden">
+              <div className="rounded-2xl overflow-hidden shadow-xl" style={{ borderLeft: "1.5px solid rgba(85,80,186,0.22)", borderRight: "1.5px solid rgba(85,80,186,0.22)", borderBottom: "1.5px solid rgba(85,80,186,0.22)" }}>
+                <div className="flex items-center gap-1.5 px-4 py-2" style={{ background: "linear-gradient(180deg, rgba(140,134,220,0.58) 0%, rgba(85,80,186,0.42) 100%)", backdropFilter: "blur(20px) saturate(200%)", WebkitBackdropFilter: "blur(20px) saturate(200%)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.50), inset 0 -1px 0 rgba(33,30,98,0.20)", borderTop: "1px solid rgba(255,255,255,0.45)", borderBottom: "1px solid rgba(85,80,186,0.30)", borderRadius: "0.75rem 0.75rem 0 0" }}>
+                  <div className="w-2 h-2 rounded-full bg-[#FF5F57]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                  <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                  <div className="w-2 h-2 rounded-full bg-[#28C840]" style={{ boxShadow: "0 0 0 0.5px rgba(0,0,0,0.15)" }}></div>
+                </div>
+              <div className="bg-white overflow-hidden">
                 <div className="grid grid-cols-2 md:grid-cols-4 border-b border-[#DAD8F6]">
                   {[
                     { label: "Total Participants", value: "521", sub: "▲ 18% vs last year" },
@@ -1430,7 +1538,6 @@ export default function Home() {
                           { name: "Digital Skills Bootcamp", color: "bg-[#5550BA]", wage: "+$5.20/hr", retention: "81%", retUp: true, literacy: "+38%", confidence: "+29%", participants: "148" },
                           { name: "Youth Leadership", color: "bg-[#B86890]", wage: "N/A", retention: "N/A", retUp: null, literacy: "+22%", confidence: "+44%", participants: "92" },
                           { name: "Newcomer Employment", color: "bg-[#948EDE]", wage: "+$4.10/hr", retention: "77%", retUp: true, literacy: "+31%", confidence: "+37%", participants: "214" },
-                          { name: "Trades Pathways", color: "bg-[#44429C]", wage: "+$6.90/hr", retention: "62%", retUp: false, literacy: "+17%", confidence: "+18%", participants: "67" },
                         ].map((row, i) => (
                           <tr
                             key={row.name}
@@ -1466,6 +1573,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1482,7 +1590,7 @@ export default function Home() {
             className="max-w-3xl mx-auto"
           >
             <div className="inline-block bg-[#5550BA]/30 border border-[#948EDE]/30 text-[#948EDE] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8">
-              ✦ Early Access — First Month Free
+              ✦ Early Access — First 2 Months Free
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white mb-6 leading-[1.1]">
@@ -1506,14 +1614,8 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-[#5550BA]/20 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="SurveyMetrix" className="h-7 w-7 rounded-lg object-contain brightness-0 invert" />
+              <img src="/logo.png" alt="SurveyMetrix" className="h-7 w-7 rounded-lg object-contain" />
               <span className="font-display text-base text-white">Survey<span className="text-[#948EDE]">Metrix</span></span>
-            </div>
-
-            <div className="flex gap-6 text-xs font-medium text-[#948EDE]">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Use</a>
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
             </div>
 
             <div className="text-xs text-[#7268CD]">

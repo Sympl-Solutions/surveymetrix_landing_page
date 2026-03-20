@@ -878,7 +878,7 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
                   <div className="text-[15px] font-bold text-[#211E62] leading-none mb-1 text-center">
                     {s.value}<span className="text-[8px] text-[#9DA4BC] font-medium">{s.unit}</span>
                   </div>
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }} className="flex items-center justify-between mt-auto">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }} className="flex items-center justify-between mt-auto w-full">
                     <span className="text-[6.5px] font-bold text-[#B86890] bg-[#FAF0F3] px-1 py-0.5 rounded inline-flex items-center gap-0.5">
                       <ArrowUp size={6} />{s.change}
                     </span>

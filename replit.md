@@ -35,7 +35,7 @@ SurveyMetrix is a nonprofit outcome-measurement platform landing page with an in
 - **Impact Areas**: 6 nonprofit sector cards with framework tags
 - **Cross-Program Outcomes**: Stats grid + comparison table
 - **Waitlist Modal**: Two-step flow — form (name, email, org, sector) → $5 founding tester pledge upsell
-- **$5 Pledge Flow**: Founding tester offer with perks, skip option; Stripe checkout placeholder (TODO: wire up)
+- **$5 Pledge Flow**: Stripe Checkout Session ($5 one-time), redirects to Stripe hosted page; returns to `/?pledge=success` or `/?pledge=cancelled` with toast banner
 - **Mobile Responsive**: All sections optimized, working hamburger menu
 
 ## Navigation
@@ -44,10 +44,20 @@ SurveyMetrix is a nonprofit outcome-measurement platform landing page with an in
 - `#platform` → Hero animation
 
 ## Waitlist Schema
-- `waitlist_entries`: email (unique), name, organization, sector, created_at
+- `waitlist_entries`: email (unique), name, organization, sector, pledged (boolean), created_at
 
 ## API Endpoints
 - `POST /api/waitlist` — Submit to waitlist (body: `{ email, name, organization, sector }`)
+- `POST /api/create-pledge-session` — Creates Stripe Checkout Session, returns `{ url }` (body: `{ waitlistId, email }`)
+- `POST /api/stripe-webhook` — Marks `pledged=true` after Stripe confirms payment
 
-## TODO
-- **Stripe Integration**: Wire up $5 pledge button to Stripe Checkout (handlePledge function in WaitlistModal). Stripe connector was not set up — will need API keys or Replit integration later.
+## Secrets (stored in Replit encrypted vault, never in code)
+- `STRIPE_SECRET_KEY` — Server-side only, used to create Checkout Sessions
+- `STRIPE_PUBLISHABLE_KEY` — Safe for frontend if needed
+- `STRIPE_WEBHOOK_SECRET` — Optional, for production webhook verification
+- `DATABASE_URL` — PostgreSQL connection string
+
+## Vercel Deployment
+- Build: `npm run build:vercel`, output: `dist/public`
+- Add `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `DATABASE_URL` to Vercel Environment Variables
+- Add Stripe webhook in Stripe Dashboard → Developers → Webhooks pointing to `https://yourdomain.com/api/stripe-webhook`

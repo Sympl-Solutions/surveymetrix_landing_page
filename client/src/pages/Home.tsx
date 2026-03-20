@@ -1123,7 +1123,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 bg-[#FDFCFA]" style={{ height: '240px' }}></div>
 
         <div className="relative z-10 pt-8 sm:pt-10 md:pt-14 pb-8 sm:pb-12 px-4 sm:px-6">
-          <div className="max-w-5xl lg:max-w-3xl mx-auto text-center">
+          <div className="max-w-5xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1142,9 +1142,8 @@ export default function Home() {
               className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-[3.25rem] text-[#211E62] mb-5 sm:mb-6 leading-[1.2] font-semibold"
             >
               <span style={{ fontStyle: "italic" }} className="text-[#B86890]">Finally.</span>{' '}
-              A survey tool built for nonprofits
-              <br className="hidden lg:block" />
-              {' '}that actually{' '}
+              A survey tool built for nonprofits{' '}
+              that actually{' '}
               <span style={{ fontStyle: "italic" }} className="text-[#5550BA]">measures outcomes</span>
             </motion.h1>
 
@@ -1176,7 +1175,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45 }}
               id="platform"
-              className="scroll-mt-20"
+              className="scroll-mt-20 lg:max-w-3xl mx-auto"
             >
               <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#5550BA] via-[#B86890] to-[#948EDE] rounded-t-2xl"></div>

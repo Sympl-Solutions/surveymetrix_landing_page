@@ -49,6 +49,44 @@ const SECTOR_OPTIONS = [
   "Other",
 ];
 
+// Submit to Mailchimp via JSONP (avoids CORS — standard approach for Mailchimp embeds)
+function submitToMailchimp(data: { email: string; name: string; organization: string; sector: string }): Promise<void> {
+  return new Promise((resolve) => {
+    const cbName = `mc_cb_${Date.now()}`;
+    const timer = setTimeout(() => {
+      delete (window as any)[cbName];
+      resolve(); // fire-and-forget — don't block on Mailchimp timeout
+    }, 6000);
+
+    (window as any)[cbName] = () => {
+      clearTimeout(timer);
+      delete (window as any)[cbName];
+      document.getElementById(cbName)?.remove();
+      resolve();
+    };
+
+    const nameParts = data.name.trim().split(/\s+/);
+    const fname = nameParts[0] || "";
+    const lname = nameParts.slice(1).join(" ") || "";
+
+    const params = new URLSearchParams({
+      EMAIL: data.email,
+      FNAME: fname,
+      LNAME: lname,
+      MMERGE6: data.organization,
+      MMERGE7: data.sector,
+      // honeypot — must be present and empty
+      b_0146b9edcb771a6cfcc87f3a7_6602e09b30: "",
+      c: cbName,
+    });
+
+    const script = document.createElement("script");
+    script.id = cbName;
+    script.src = `https://symplsolutions.us21.list-manage.com/subscribe/post-json?u=0146b9edcb771a6cfcc87f3a7&id=6602e09b30&f_id=0036afe6f0&${params}`;
+    document.head.appendChild(script);
+  });
+}
+
 function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -65,16 +103,22 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       const docRef = doc(db, WAITLIST_COLLECTION, docId);
       const existing = await getDoc(docRef);
       if (existing.exists()) {
+        // Still sync to Mailchimp in case they weren't added before
+        submitToMailchimp(data).catch(() => {});
         return { message: "You're already on the waitlist!", alreadyExists: true };
       }
-      await setDoc(docRef, {
-        name: data.name,
-        email: data.email,
-        organization: data.organization,
-        sector: data.sector,
-        pledged: false,
-        createdAt: new Date().toISOString(),
-      });
+      // Write to Firebase and Mailchimp in parallel
+      await Promise.all([
+        setDoc(docRef, {
+          name: data.name,
+          email: data.email,
+          organization: data.organization,
+          sector: data.sector,
+          pledged: false,
+          createdAt: new Date().toISOString(),
+        }),
+        submitToMailchimp(data),
+      ]);
       return { message: "You're on the waitlist!", alreadyExists: false };
     },
     onSuccess: (data) => {

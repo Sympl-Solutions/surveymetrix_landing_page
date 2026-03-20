@@ -96,29 +96,32 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const [step, setStep] = useState<"form" | "pledge">("form");
   const [message, setMessage] = useState("");
   const [pledgeLoading, setPledgeLoading] = useState(false);
+  const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: { email: string; name: string; organization: string; sector: string }) => {
+    mutationFn: async (data: { email: string; name: string; organization: string; sector: string; newsletter: boolean }) => {
       const docId = data.email.toLowerCase().replace(/[^a-z0-9]/g, "_");
       const docRef = doc(db, WAITLIST_COLLECTION, docId);
       const existing = await getDoc(docRef);
       if (existing.exists()) {
-        // Still sync to Mailchimp in case they weren't added before
-        submitToMailchimp(data).catch(() => {});
+        if (data.newsletter) submitToMailchimp(data).catch(() => {});
         return { message: "You're already on the waitlist!", alreadyExists: true };
       }
-      // Write to Firebase and Mailchimp in parallel
-      await Promise.all([
+      // Write to Firebase always; send to Mailchimp only with explicit consent
+      const tasks: Promise<any>[] = [
         setDoc(docRef, {
           name: data.name,
           email: data.email,
           organization: data.organization,
           sector: data.sector,
           pledged: false,
+          newsletter: data.newsletter,
+          consentAt: data.newsletter ? new Date().toISOString() : null,
           createdAt: new Date().toISOString(),
         }),
-        submitToMailchimp(data),
-      ]);
+      ];
+      if (data.newsletter) tasks.push(submitToMailchimp(data));
+      await Promise.all(tasks);
       return { message: "You're on the waitlist!", alreadyExists: false };
     },
     onSuccess: (data) => {
@@ -141,6 +144,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       name: name.trim(),
       organization: organization.trim(),
       sector: sector === "Other" ? otherSector.trim() : sector,
+      newsletter: subscribeNewsletter,
     });
   };
 
@@ -177,6 +181,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         setStep("form");
         setMessage("");
         setPledgeLoading(false);
+        setSubscribeNewsletter(false);
         mutation.reset();
       }, 300);
     }
@@ -272,6 +277,29 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     data-testid="input-other-sector"
                   />
                 )}
+                {/* Newsletter consent — required by CASL/GDPR; unchecked by default */}
+                <label className="flex items-start gap-3 cursor-pointer group" data-testid="label-newsletter-consent">
+                  <div className="relative mt-0.5 flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={subscribeNewsletter}
+                      onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+                      className="sr-only"
+                      data-testid="checkbox-newsletter"
+                    />
+                    <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${subscribeNewsletter ? "bg-[#5550BA] border-[#5550BA]" : "border-gray-300 group-hover:border-[#5550BA]"}`}>
+                      {subscribeNewsletter && (
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 8">
+                          <path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-xs text-[#6A7290] leading-relaxed">
+                    Yes, I'd like to receive product updates, tips, and news from SurveyMetrix. You can unsubscribe at any time.
+                  </span>
+                </label>
+
                 {message && step === "form" && (
                   <p className="text-red-500 text-sm" data-testid="text-error">{message}</p>
                 )}

@@ -46,24 +46,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const sig = req.headers["stripe-signature"] as string;
 
+  // Always require a webhook signing secret — reject unverified requests
+  if (!webhookSecret) {
+    console.error("[Webhook] STRIPE_WEBHOOK_SECRET is not configured. Rejecting request.");
+    return res.status(500).json({ message: "Webhook not configured." });
+  }
+
+  if (!sig) {
+    console.error("[Webhook] Missing stripe-signature header.");
+    return res.status(400).send("Missing signature");
+  }
+
   let event: Stripe.Event;
 
   try {
-    if (webhookSecret && sig) {
-      const rawBody = await getRawBody(req);
-      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-    } else {
-      // No signing secret configured — accept raw body (dev/testing only)
-      const rawBody = await getRawBody(req);
-      event = JSON.parse(rawBody.toString()) as Stripe.Event;
-    }
+    const rawBody = await getRawBody(req);
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err) {
-    console.error("[Webhook] Signature error:", err);
-    return res.status(400).send("Webhook error");
+    console.error("[Webhook] Signature verification failed:", err);
+    return res.status(400).send("Webhook signature verification failed");
   }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    // Only mark pledged when payment is actually confirmed as paid
+    if (session.payment_status !== "paid") {
+      console.log(`[Webhook] Session completed but payment_status is "${session.payment_status}" — skipping.`);
+      return res.json({ received: true });
+    }
+
     const email = session.metadata?.email || session.customer_email || "";
 
     if (email) {
@@ -73,6 +85,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.error("[Webhook] Firestore update failed:", err);
         // Still return 200 so Stripe doesn't retry — log the failure
       }
+    } else {
+      console.warn("[Webhook] checkout.session.completed received but no email found in metadata.");
     }
   }
 

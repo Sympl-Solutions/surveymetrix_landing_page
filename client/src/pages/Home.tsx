@@ -870,12 +870,12 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
       <div className="px-2.5 pt-2 pb-1.5">
         <div className="grid grid-cols-4 gap-1.5">
           {stats.map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-gray-100 shadow-sm px-2 pt-2 pb-1.5 relative overflow-hidden flex flex-col">
+            <div key={s.label} className="bg-white rounded-xl border border-gray-100 shadow-sm px-2 pt-2 pb-1.5 relative overflow-hidden flex flex-col items-center">
               <div className="absolute top-0 left-0 w-full h-0.5 rounded-t-xl" style={{ backgroundColor: s.color }} />
-              <div className="text-[6.5px] text-[#6A7290] font-medium mb-0.5 mt-0.5 leading-tight">{s.label}</div>
+              <div className="text-[6.5px] text-[#6A7290] font-medium mb-0.5 mt-0.5 leading-tight text-center w-full">{s.label}</div>
               {phase >= 2 ? (
-                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: s.delay }} className="flex flex-col flex-1">
-                  <div className="text-[15px] font-bold text-[#211E62] leading-none mb-1">
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: s.delay }} className="flex flex-col flex-1 items-center w-full">
+                  <div className="text-[15px] font-bold text-[#211E62] leading-none mb-1 text-center">
                     {s.value}<span className="text-[8px] text-[#9DA4BC] font-medium">{s.unit}</span>
                   </div>
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: s.delay + 0.3 }} className="flex items-center justify-between mt-auto">
@@ -1142,7 +1142,9 @@ export default function Home() {
               className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-[3.25rem] text-[#211E62] mb-5 sm:mb-6 leading-[1.2] font-semibold"
             >
               <span style={{ fontStyle: "italic" }} className="text-[#B86890]">Finally.</span>{' '}
-              A survey tool built for nonprofits that actually{' '}
+              A survey tool built for nonprofits
+              <br className="hidden lg:block" />
+              {' '}that actually{' '}
               <span style={{ fontStyle: "italic" }} className="text-[#5550BA]">measures outcomes</span>
             </motion.h1>
 

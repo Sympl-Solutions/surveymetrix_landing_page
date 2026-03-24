@@ -127,6 +127,10 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     onSuccess: (data) => {
       setMessage(data.message);
       setStep("pledge");
+      // Fire Meta Pixel Lead event on successful waitlist signup
+      if (!data.alreadyExists) {
+        (window as any).fbq?.('track', 'Lead');
+      }
     },
     onError: () => {
       setMessage("Something went wrong. Please try again.");
@@ -151,6 +155,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const handlePledge = async () => {
     if (!email.trim()) return;
     setPledgeLoading(true);
+    // Fire Meta Pixel InitiateCheckout when user clicks the pledge button
+    (window as any).fbq?.('track', 'InitiateCheckout', { value: 5, currency: 'USD' });
     try {
       const res = await fetch("/api/create-pledge-session", {
         method: "POST",

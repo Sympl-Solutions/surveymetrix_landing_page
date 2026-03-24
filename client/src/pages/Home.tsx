@@ -180,7 +180,10 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      // Step 2: fire when someone opens the Early Access modal
+      (window as any).fbq?.('track', 'ViewContent', { content_name: 'Early Access Form' });
+    } else {
       // Revert /welcome URL back to / when modal is dismissed
       if (window.location.pathname === '/welcome') {
         window.history.pushState({}, '', '/');

@@ -5,6 +5,7 @@ import eastEndArts from "./East_End_Arts.png";
 import folkCanada from "./Folk_Canada.png";
 import settlementAid from "./Settlement_Aid_For_Newcomers.png";
 import glenEden from "./Glen_Eden_Youth_Center.png";
+import careOf from "./Care_Of.png";
 
 export interface OrgLogo {
   name: string;
@@ -20,6 +21,7 @@ const orgLogos: OrgLogo[] = [
   { name: "Folk Canada", initials: "FC", logo: folkCanada },
   { name: "Settlement Aid for Newcomers", initials: "SA", logo: settlementAid },
   { name: "Glen Eden Youth Center", initials: "GE", logo: glenEden },
+  { name: "Care/Of", initials: "CO", logo: careOf },
 ];
 
 export default orgLogos;

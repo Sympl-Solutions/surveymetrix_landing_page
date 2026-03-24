@@ -35,8 +35,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       mode: "payment",
       customer_email: email,
       metadata: { email },
-      success_url: `${origin}/?pledge=success`,
-      cancel_url: `${origin}/?pledge=cancelled`,
+      success_url: `${origin}/pledge-success`,
+      cancel_url: `${origin}/`,
     });
 
     return res.json({ url: session.url });

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import orgLogos from "@/assets/logos/logoMap";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
@@ -127,6 +128,8 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     onSuccess: (data) => {
       setMessage(data.message);
       setStep("pledge");
+      // Update URL to /welcome for Meta URL-based conversion tracking
+      window.history.pushState({}, '', '/welcome');
       // Fire Meta Pixel Lead event on successful waitlist signup
       if (!data.alreadyExists) {
         (window as any).fbq?.('track', 'Lead');
@@ -178,6 +181,10 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   useEffect(() => {
     if (!isOpen) {
+      // Revert /welcome URL back to / when modal is dismissed
+      if (window.location.pathname === '/welcome') {
+        window.history.pushState({}, '', '/');
+      }
       setTimeout(() => {
         setEmail("");
         setName("");
@@ -1102,21 +1109,20 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const [highestStep, setHighestStep] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  const [location, navigate] = useLocation();
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [pledgeBanner, setPledgeBanner] = useState<"success" | "cancelled" | null>(null);
+  const [showPledgeSuccess, setShowPledgeSuccess] = useState(location === '/pledge-success');
   const animationRef = useRef<HTMLDivElement>(null);
 
+  // On /pledge-success: fire Meta Pixel Purchase event once
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const pledge = params.get("pledge");
-    if (pledge === "success" || pledge === "cancelled") {
-      setPledgeBanner(pledge);
-      window.history.replaceState({}, "", window.location.pathname);
-      setTimeout(() => setPledgeBanner(null), 6000);
+    if (location === '/pledge-success') {
+      setShowPledgeSuccess(true);
+      (window as any).fbq?.('track', 'Purchase', { value: 5, currency: 'USD' });
     }
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     const el = animationRef.current;
@@ -1140,26 +1146,85 @@ export default function Home() {
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans selection:bg-[#B86890]/20">
       <WaitlistModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
 
-      {/* Pledge return banner */}
-      {pledgeBanner && (
-        <motion.div
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -40 }}
-          className={`fixed top-4 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-2xl shadow-xl text-sm font-semibold flex items-center gap-2 ${
-            pledgeBanner === "success"
-              ? "bg-green-500 text-white"
-              : "bg-[#F4F3FC] text-[#211E62] border border-[#DAD8F6]"
-          }`}
-          data-testid="banner-pledge-status"
-        >
-          {pledgeBanner === "success" ? (
-            <><CheckCircle2 size={16} /> Thank you! Your $5 founding tester pledge is confirmed.</>
-          ) : (
-            <><span>Payment cancelled — your waitlist spot is still saved.</span></>
-          )}
-        </motion.div>
-      )}
+      {/* Pledge success modal — shown after returning from Stripe /pledge-success */}
+      <AnimatePresence>
+        {showPledgeSuccess && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => { setShowPledgeSuccess(false); navigate('/'); }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 24 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full z-10 overflow-hidden"
+              data-testid="modal-pledge-success"
+            >
+              <button
+                onClick={() => { setShowPledgeSuccess(false); navigate('/'); }}
+                className="absolute top-4 right-4 text-[#9DA4BC] hover:text-[#4A5068] transition-colors z-20"
+                data-testid="button-close-pledge-success"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Header */}
+              <div className="bg-gradient-to-br from-[#211E62] via-[#2E2A78] to-[#1a1754] px-8 pt-8 pb-7 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-[#5550BA]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-28 h-28 bg-[#B86890]/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+                <div className="relative z-10">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.15 }}
+                    className="w-14 h-14 rounded-full bg-green-400/20 border border-green-400/40 flex items-center justify-center mb-5"
+                  >
+                    <CheckCircle2 size={30} className="text-green-400" />
+                  </motion.div>
+                  <h3 className="font-display font-bold text-2xl leading-tight mb-2">
+                    You're a Founding Tester!
+                  </h3>
+                  <p className="text-[#C4C0E8] text-sm leading-relaxed" data-testid="text-pledge-success">
+                    Your $5 pledge is confirmed. We've locked in your founding tester status — it'll be applied as credit when we launch.
+                  </p>
+                </div>
+              </div>
+
+              {/* Perks */}
+              <div className="bg-[#F4F3FC] px-8 py-6">
+                <p className="text-xs font-bold text-[#211E62] uppercase tracking-wider mb-4">What's coming your way</p>
+                <div className="space-y-3">
+                  {[
+                    { icon: Zap,    color: "text-[#5550BA]", bg: "bg-[#EEEDfb]", text: "First access before the public launch" },
+                    { icon: Shield, color: "text-[#B86890]", bg: "bg-[#FAF0F3]", text: "2 months free at launch ($100+ value)" },
+                    { icon: Crown,  color: "text-[#B86890]", bg: "bg-[#FAF0F3]", text: "Founding Tester badge on your account" },
+                    { icon: Users,  color: "text-[#5550BA]", bg: "bg-[#EEEDfb]", text: "Private channel with the product team" },
+                  ].map((perk) => (
+                    <div key={perk.text} className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
+                      <div className={`w-7 h-7 rounded-lg ${perk.bg} flex items-center justify-center shrink-0`}>
+                        <perk.icon size={14} className={perk.color} />
+                      </div>
+                      <span className="text-sm text-[#4A5068]">{perk.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => { setShowPledgeSuccess(false); navigate('/'); }}
+                  data-testid="button-pledge-success-done"
+                  className="w-full mt-5 bg-[#5550BA] text-white font-bold py-3 rounded-xl hover:bg-[#211E62] transition-all text-sm"
+                >
+                  Back to SurveyMetrix
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* 1) Nav bar */}
       <header className="px-6 lg:px-12 py-4 flex justify-between items-center bg-[#FDFCFA] border-b border-[#DAD8F6] sticky top-0 z-50">

@@ -1743,8 +1743,9 @@ export default function Home() {
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white mb-6 leading-[1.1]">
-              Stop merging spreadsheets.{' '}Start measuring{' '}
-              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcomes</span>.
+              Surveys are great but measuring{' '}
+              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcome</span>
+              {' '}is even better
             </h2>
 
             <p className="text-[#948EDE] text-base md:text-lg font-light mb-10 max-w-lg mx-auto leading-relaxed">

@@ -1743,8 +1743,8 @@ export default function Home() {
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[2.75rem] text-white mb-6 leading-[1.1]">
-              Surveys are great<br className="hidden md:block" />{' '}
-              but measuring{' '}
+              Surveys are great but<br className="hidden md:block" />{' '}
+              measuring{' '}
               <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcome</span>
               {' '}is even better
             </h2>

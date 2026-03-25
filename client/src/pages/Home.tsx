@@ -1742,8 +1742,9 @@ export default function Home() {
               ✦ Early Access — First 2 Months Free
             </div>
 
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white mb-6 leading-[1.1]">
-              Surveys are great but measuring<br className="hidden lg:block" />{' '}
+            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[2.75rem] text-white mb-6 leading-[1.1]">
+              Surveys are great<br className="hidden md:block" />{' '}
+              but measuring{' '}
               <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcome</span>
               {' '}is even better
             </h2>

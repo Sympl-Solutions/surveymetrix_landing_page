@@ -35,7 +35,9 @@ import {
   Shield,
   Zap,
   Crown,
-  CreditCard
+  CreditCard,
+  Instagram,
+  Facebook
 } from "lucide-react";
 
 const SECTOR_OPTIONS = [
@@ -1763,6 +1765,36 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <img src="/logo.png" alt="SurveyMetrix" className="h-7 w-7 rounded-lg object-contain" />
               <span className="font-display text-base text-white">Survey<span className="text-[#948EDE]">Metrix</span></span>
+            </div>
+
+            <div className="flex items-center gap-5">
+              <a
+                href="/privacy-policy"
+                className="text-xs text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-privacy-policy"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="https://www.instagram.com/surveymetrix"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SurveyMetrix on Instagram"
+                className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-instagram"
+              >
+                <Instagram size={16} />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61580726204388"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SurveyMetrix on Facebook"
+                className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-facebook"
+              >
+                <Facebook size={16} />
+              </a>
             </div>
 
             <div className="text-xs text-[#7268CD]">

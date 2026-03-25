@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useLocation } from "wouter";
-import { ArrowLeft } from "lucide-react";
+import { Menu, X, Instagram, Facebook } from "lucide-react";
 
 const sections = [
   {
@@ -15,19 +16,35 @@ By clicking on our ads, submitting the waitlist form, completing a Meta Instant 
     subsections: [
       {
         label: "2a. Via Meta Instant Form",
-        items: ["First name and last name", "Email address", "Job role (Program Manager, Executive Director, Grants Manager, or Other)", "Organisation name"],
+        items: [
+          "First name and last name",
+          "Email address",
+          "Job role (Program Manager, Executive Director, Grants Manager, or Other)",
+          "Organisation name",
+        ],
       },
       {
         label: "2b. Via Website",
-        items: ["Email address", "Any additional details voluntarily submitted on the waitlist page"],
+        items: [
+          "Email address",
+          "Any additional details voluntarily submitted on the waitlist page",
+        ],
       },
       {
         label: "2c. Priority Access Payment",
-        items: ["Payment information processed securely through Stripe (we do not store card details)", "Name and email address associated with the payment"],
+        items: [
+          "Payment information processed securely through Stripe (we do not store card details)",
+          "Name and email address associated with the payment",
+        ],
       },
       {
         label: "2d. Automatically Collected Data",
-        items: ["Browser and device type (via Meta Pixel)", "IP address and approximate location", "Ad interaction data including clicks, impressions, and conversions", "UTM parameters (utm_source, utm_medium, utm_campaign, utm_content) used to attribute which ad or ad set you interacted with"],
+        items: [
+          "Browser and device type (via Meta Pixel)",
+          "IP address and approximate location",
+          "Ad interaction data including clicks, impressions, and conversions",
+          "UTM parameters (utm_source, utm_medium, utm_campaign, utm_content) used to attribute which ad or ad set you interacted with",
+        ],
       },
     ],
   },
@@ -129,38 +146,71 @@ By clicking on our ads, submitting the waitlist form, completing a Meta Instant 
       email: "contact@surveymetrix.com",
       website: "www.surveymetrix.com",
     },
-    footer: "This policy applies specifically to data collected through the SurveyMetrix Phase 1 Meta Ad Campaign (March 2026). A full product privacy policy will be published at product launch.",
+    footer: "A full product privacy policy will be published at product launch.",
   },
 ];
 
 export default function PrivacyPolicy() {
   const [, navigate] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans">
-      {/* Nav */}
+
+      {/* Navbar — identical to Home */}
       <header className="px-6 lg:px-12 py-4 flex justify-between items-center bg-[#FDFCFA] border-b border-[#DAD8F6] sticky top-0 z-50">
-        <div className="flex items-center gap-2.5">
+        <a href="/" className="flex items-center gap-2.5">
           <img src="/logo.png" alt="SurveyMetrix" className="h-8 w-8 rounded-lg object-contain" />
           <span className="font-display text-xl text-[#211E62]">Survey<span className="text-[#5550BA]">Metrix</span></span>
+        </a>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex gap-6 text-xs font-medium items-center uppercase tracking-wider">
+          <a href="/#how-it-works" className="text-[#44429C] hover:text-[#211E62] transition-colors">How it works</a>
+          <a href="/#impact-areas" className="text-[#44429C] hover:text-[#211E62] transition-colors">Impact Areas</a>
+          <a
+            href="/"
+            className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold normal-case tracking-normal text-sm"
+            data-testid="button-waitlist-nav-privacy"
+          >
+            Get Early Access
+          </a>
         </div>
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-1.5 text-sm text-[#5550BA] hover:text-[#211E62] transition-colors font-medium"
-          data-testid="button-back-home"
-        >
-          <ArrowLeft size={15} /> Back to home
-        </button>
+
+        {/* Mobile toggle */}
+        <div className="md:hidden">
+          <button
+            className="text-[#4A5068]"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            data-testid="button-mobile-menu-privacy"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </header>
 
-      {/* Hero */}
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-b border-[#DAD8F6] px-6 py-4 flex flex-col gap-3 sticky top-[57px] z-50">
+          <a href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">How it works</a>
+          <a href="/#impact-areas" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">Impact Areas</a>
+          <a
+            href="/"
+            className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg font-semibold text-sm text-center"
+          >
+            Get Early Access
+          </a>
+        </div>
+      )}
+
+      {/* Page hero */}
       <div className="bg-gradient-to-br from-[#211E62] to-[#2E2A78] px-6 py-16 text-center">
         <p className="text-[#948EDE] text-xs font-semibold uppercase tracking-widest mb-3">Legal</p>
         <h1 className="font-display text-3xl md:text-4xl text-white mb-3">Privacy Policy</h1>
-        <p className="text-[#C4C0E8] text-sm">Effective: March 2026 &nbsp;·&nbsp; Phase 1 Meta Ad Campaign</p>
+        <p className="text-[#C4C0E8] text-sm">Effective: March 2026</p>
       </div>
 
-      {/* Content */}
+      {/* Policy content */}
       <main className="max-w-3xl mx-auto px-6 py-14">
         {sections.map((section) => (
           <div key={section.number} className="mb-10">
@@ -216,10 +266,51 @@ export default function PrivacyPolicy() {
         ))}
       </main>
 
-      {/* Footer */}
-      <div className="border-t border-[#DAD8F6] py-8 text-center">
-        <p className="text-xs text-[#9DA4BC]">© {new Date().getFullYear()} SurveyMetrix. All rights reserved.</p>
-      </div>
+      {/* Footer — identical to Home */}
+      <section className="relative overflow-hidden">
+        <div className="bg-gradient-to-b from-[#1a1754] via-[#211E62] to-[#19163f] py-10 px-4 sm:px-6">
+          <div className="max-w-5xl mx-auto pt-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="/" className="flex items-center gap-2">
+              <img src="/logo.png" alt="SurveyMetrix" className="h-7 w-7 rounded-lg object-contain" />
+              <span className="font-display text-base text-white">Survey<span className="text-[#948EDE]">Metrix</span></span>
+            </a>
+
+            <div className="flex items-center gap-5">
+              <a
+                href="/privacy-policy"
+                className="text-xs text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-privacy-policy-footer"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="https://www.instagram.com/surveymetrix"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SurveyMetrix on Instagram"
+                className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-instagram-footer"
+              >
+                <Instagram size={16} />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61580726204388"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SurveyMetrix on Facebook"
+                className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
+                data-testid="link-facebook-footer"
+              >
+                <Facebook size={16} />
+              </a>
+            </div>
+
+            <div className="text-xs text-[#7268CD]">
+              © {new Date().getFullYear()} SurveyMetrix. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

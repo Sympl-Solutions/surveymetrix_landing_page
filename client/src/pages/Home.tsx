@@ -448,11 +448,11 @@ const Step1 = ({ onComplete }: { onComplete?: () => void }) => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1000),
-      setTimeout(() => { setPhase(2); setAdded([0]); }, 3500),
-      setTimeout(() => setAdded([0, 2]), 6000),
-      setTimeout(() => { setPhase(3); setAdded([0, 1, 2]); }, 8500),
-      setTimeout(() => onComplete?.(), 11000),
+      setTimeout(() => setPhase(1), 700),
+      setTimeout(() => { setPhase(2); setAdded([0]); }, 2450),
+      setTimeout(() => setAdded([0, 2]), 4200),
+      setTimeout(() => { setPhase(3); setAdded([0, 1, 2]); }, 5950),
+      setTimeout(() => onComplete?.(), 7700),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -609,28 +609,28 @@ const Step2 = ({ onComplete }: { onComplete?: () => void }) => {
       // ── Mobile: simplified flow — questions pre-loaded, assign program, personalise ──
       setEditTargetName("Job Retention at 6 Months");
       const timers = [
-        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 500),
-        setTimeout(() => setPhase(2), 1800),   // dropdown opens
-        setTimeout(() => setPhase(3), 3000),   // Employment Readiness selected
-        setTimeout(() => setEditing(true), 4300),  // personalise Wage Growth
-        setTimeout(() => { setEditDone(true); setEditing(false); }, 6000),
-        setTimeout(() => setPhase(4), 6800),   // success
-        setTimeout(() => onComplete?.(), 9500),
+        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 350),
+        setTimeout(() => setPhase(2), 1260),   // dropdown opens
+        setTimeout(() => setPhase(3), 2100),   // Employment Readiness selected
+        setTimeout(() => setEditing(true), 3010),  // personalise Wage Growth
+        setTimeout(() => { setEditDone(true); setEditing(false); }, 4200),
+        setTimeout(() => setPhase(4), 4760),   // success
+        setTimeout(() => onComplete?.(), 6650),
       ];
       return () => timers.forEach(clearTimeout);
     } else {
       // ── Desktop: full flow — library panel visible, cursor picks from library ──
       setEditTargetName("Job Retention at 6 Months");
       const timers = [
-        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 700),
-        setTimeout(() => setPhase(2), 2200),
-        setTimeout(() => setPhase(3), 3600),
-        setTimeout(() => setSelected(new Set([0, 1, 2, 3])), 4800),
-        setTimeout(() => setSelected(new Set([0, 1, 2, 3, 5])), 6300),
-        setTimeout(() => setEditing(true), 7800),
-        setTimeout(() => { setEditDone(true); setEditing(false); }, 9600),
-        setTimeout(() => setPhase(4), 10400),
-        setTimeout(() => onComplete?.(), 13500),
+        setTimeout(() => { setPhase(1); setSelected(new Set([0, 1, 2])); }, 490),
+        setTimeout(() => setPhase(2), 1540),
+        setTimeout(() => setPhase(3), 2520),
+        setTimeout(() => setSelected(new Set([0, 1, 2, 3])), 3360),
+        setTimeout(() => setSelected(new Set([0, 1, 2, 3, 5])), 4410),
+        setTimeout(() => setEditing(true), 5460),
+        setTimeout(() => { setEditDone(true); setEditing(false); }, 6720),
+        setTimeout(() => setPhase(4), 7280),
+        setTimeout(() => onComplete?.(), 9450),
       ];
       return () => timers.forEach(clearTimeout);
     }
@@ -874,11 +874,11 @@ const Step3 = ({ onComplete }: { onComplete?: () => void }) => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 1000),   // filter bar / computing tooltip
-      setTimeout(() => setPhase(2), 3200),   // KPI cards animate in
-      setTimeout(() => setPhase(3), 6000),   // bottom panels slide in
-      setTimeout(() => setPhase(4), 9000),   // insight badge appears
-      setTimeout(() => onComplete?.(), 14500), // hold fully-loaded dashboard for 5s then cycle
+      setTimeout(() => setPhase(1), 700),    // filter bar / computing tooltip
+      setTimeout(() => setPhase(2), 2240),   // KPI cards animate in
+      setTimeout(() => setPhase(3), 4200),   // bottom panels slide in
+      setTimeout(() => setPhase(4), 6300),   // insight badge appears
+      setTimeout(() => onComplete?.(), 10150), // hold fully-loaded dashboard then cycle
     ];
     return () => timers.forEach(clearTimeout);
   }, []);

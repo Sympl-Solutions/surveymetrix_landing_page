@@ -1736,7 +1736,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="max-w-3xl mx-auto"
+            className="max-w-4xl mx-auto"
           >
             <div className="inline-block bg-[#5550BA]/30 border border-[#948EDE]/30 text-[#948EDE] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8">
               ✦ Early Access — First 2 Months Free

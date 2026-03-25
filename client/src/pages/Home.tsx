@@ -1412,7 +1412,7 @@ export default function Home() {
               Time and money your team gets back
             </h2>
             <p className="text-[#6A7290] text-base max-w-xl mx-auto leading-relaxed">
-              Nonprofits spend hours every month pulling survey data into reports manually. SurveyMetrix closes that gap automatically — so your team focuses on programs, not spreadsheets.
+              Nonprofits spend hours every month pulling survey data into reports manually. SurveyMetrix closes that gap automatically — so your team focuses on programs, not survey responses.
             </p>
           </motion.div>
 

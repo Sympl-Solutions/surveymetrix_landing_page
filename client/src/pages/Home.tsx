@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import orgLogos from "@/assets/logos/logoMap";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, WAITLIST_COLLECTION } from "@/lib/firebase";
@@ -88,6 +88,34 @@ function submitToMailchimp(data: { email: string; name: string; organization: st
     script.src = `https://symplsolutions.us21.list-manage.com/subscribe/post-json?u=0146b9edcb771a6cfcc87f3a7&id=6602e09b30&f_id=0036afe6f0&${params}`;
     document.head.appendChild(script);
   });
+}
+
+function CountUp({ to, duration = 1.8, prefix = "", suffix = "", decimals = 0 }: {
+  to: number; duration?: number; prefix?: string; suffix?: string; decimals?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let raf: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(parseFloat((eased * to).toFixed(decimals)));
+      if (progress < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [isInView, to, duration, decimals]);
+
+  return (
+    <span ref={ref}>
+      {prefix}{decimals > 0 ? count.toFixed(decimals) : Math.round(count).toLocaleString()}{suffix}
+    </span>
+  );
 }
 
 function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -1361,6 +1389,107 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-6xl mx-auto px-6"><div className="border-t border-[#DAD8F6]"></div></div>
+
+      {/* Value Proposition — hours & cost saved */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-[#EEEDfb]">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-block bg-white border border-[#BCB8EE] text-[#5550BA] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
+              The SurveyMetrix difference
+            </div>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-4">
+              Time and money your team gets back
+            </h2>
+            <p className="text-[#6A7290] text-base max-w-xl mx-auto leading-relaxed">
+              Nonprofits spend hours every month pulling survey data into reports manually. SurveyMetrix closes that gap automatically — so your team focuses on programs, not spreadsheets.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              {
+                icon: Activity,
+                prefix: "",
+                value: 8,
+                suffix: " hrs",
+                decimals: 0,
+                label: "Saved per report",
+                desc: "No more manually merging survey exports, spreadsheets, and program notes into one document.",
+                color: "text-[#5550BA]",
+                bg: "bg-[#EEEDfb]",
+              },
+              {
+                icon: TrendingUp,
+                prefix: "$",
+                value: 6500,
+                suffix: "",
+                decimals: 0,
+                label: "Saved per year",
+                desc: "In staff time reclaimed from repetitive data collection, formatting, and funder reporting.",
+                color: "text-[#B86890]",
+                bg: "bg-[#FAF0F3]",
+              },
+              {
+                icon: Zap,
+                prefix: "",
+                value: 3,
+                suffix: "×",
+                decimals: 0,
+                label: "Faster funder reports",
+                desc: "From survey close to polished impact report — automated in minutes, not assembled over days.",
+                color: "text-[#5550BA]",
+                bg: "bg-[#EEEDfb]",
+              },
+              {
+                icon: BarChart,
+                prefix: "",
+                value: 100,
+                suffix: "%",
+                decimals: 0,
+                label: "Data in one place",
+                desc: "Survey responses, KPI scores, and outcome trends unified across all your programs and cohorts.",
+                color: "text-[#B86890]",
+                bg: "bg-[#FAF0F3]",
+              },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-6 border border-[#DAD8F6] flex flex-col gap-3"
+                data-testid={`card-value-prop-${i}`}
+              >
+                <div className={`w-9 h-9 rounded-xl ${stat.bg} flex items-center justify-center`}>
+                  <stat.icon size={18} className={stat.color} />
+                </div>
+                <div className={`font-display text-3xl sm:text-4xl font-bold ${stat.color}`}>
+                  <CountUp
+                    to={stat.value}
+                    prefix={stat.prefix}
+                    suffix={stat.suffix}
+                    decimals={stat.decimals}
+                    duration={1.8}
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#211E62] mb-1">{stat.label}</p>
+                  <p className="text-xs text-[#6A7290] leading-relaxed">{stat.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

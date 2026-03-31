@@ -1599,7 +1599,7 @@ export default function Home() {
 
       <div className="max-w-6xl mx-auto px-6"><div className="border-t border-[#DAD8F6]"></div></div>
 
-      {/* Value Proposition — hours & cost saved */}
+      {/* Pain Point Stats — what outcome reporting costs nonprofits today */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-[#EEEDfb]">
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -1610,26 +1610,26 @@ export default function Home() {
             className="text-center mb-12"
           >
             <div className="inline-block bg-white border border-[#BCB8EE] text-[#5550BA] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
-              The SurveyMetrix difference
+              The reporting gap
             </div>
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-4">
-              Time and money your team gets back
+              What outcome reporting is really costing your team
             </h2>
             <p className="text-[#6A7290] text-base max-w-xl mx-auto leading-relaxed">
-              Nonprofits spend hours every month pulling survey data into reports manually. SurveyMetrix closes that gap automatically — so your team focuses on programs, not survey responses.
+              For most nonprofits, impact reporting is a quarterly scramble — survey data scattered across platforms, hours lost to manual formatting, and funders asking for proof you don't have time to compile.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               {
-                icon: Activity,
+                icon: Clock,
                 prefix: "",
-                value: 32,
+                value: 36,
                 suffix: " hrs",
                 decimals: 0,
-                label: "Saved per report",
-                desc: "A typical outcome report takes 36 hours. SurveyMetrix delivers it in under 4 — no merging, no manual formatting.",
+                label: "Per outcome report",
+                desc: "The average time nonprofits spend manually collecting survey data, reconciling spreadsheets, and formatting a single impact report.",
                 color: "text-[#5550BA]",
                 bg: "bg-[#EEEDfb]",
               },
@@ -1637,32 +1637,32 @@ export default function Home() {
                 icon: TrendingUp,
                 prefix: "$",
                 value: 21600,
-                suffix: "",
+                suffix: "/yr",
                 decimals: 0,
-                label: "Saved per year",
-                desc: "The real cost of outsourcing impact reporting — redirected back into your programs, your people, and your mission.",
+                label: "In annual reporting costs",
+                desc: "What mid-size nonprofits spend each year on consultants, freelancers, and staff overtime tied to impact reporting alone.",
                 color: "text-[#B86890]",
                 bg: "bg-[#FAF0F3]",
               },
               {
-                icon: Zap,
+                icon: Target,
                 prefix: "",
-                value: 10,
-                suffix: "×",
+                value: 75,
+                suffix: "%",
                 decimals: 0,
-                label: "Faster than traditional",
-                desc: "What takes consultants 36 hours to produce by hand, SurveyMetrix generates automatically in one click.",
+                label: "Of funders require outcomes",
+                desc: "Three in four foundation funders say measurable outcome evidence directly influences their grant decisions — yet most nonprofits can't produce it on demand.",
                 color: "text-[#5550BA]",
                 bg: "bg-[#EEEDfb]",
               },
               {
-                icon: BarChart,
+                icon: GitBranch,
                 prefix: "",
-                value: 100,
-                suffix: "%",
+                value: 4,
+                suffix: "+ tools",
                 decimals: 0,
-                label: "Data in one place",
-                desc: "Survey responses, KPI scores, and outcome trends unified across all your programs and cohorts.",
+                label: "Disconnected per org",
+                desc: "Google Forms, SurveyMonkey, Excel, email — the average nonprofit juggles four or more platforms just to collect and manage survey data.",
                 color: "text-[#B86890]",
                 bg: "bg-[#FAF0F3]",
               },
@@ -1674,7 +1674,7 @@ export default function Home() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-6 border border-[#DAD8F6] flex flex-col gap-3"
-                data-testid={`card-value-prop-${i}`}
+                data-testid={`card-pain-point-${i}`}
               >
                 <div className={`w-9 h-9 rounded-xl ${stat.bg} flex items-center justify-center`}>
                   <stat.icon size={18} className={stat.color} />
@@ -1695,6 +1695,10 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+
+          <p className="text-center text-[10px] text-[#9DA4BC] mt-6 leading-relaxed">
+            Based on sector research and estimated averages for Canadian nonprofits with 5–25 staff.
+          </p>
         </div>
       </section>
 

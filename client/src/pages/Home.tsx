@@ -1363,7 +1363,20 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Mobile sticky CTA — bottom-right, phone only */}
+      {/* Mobile sticky CTAs — bottom-left Book a Call, bottom-right Get Early Access, phone only */}
+      <div className="md:hidden fixed bottom-6 left-5 z-50">
+        <motion.button
+          initial={{ opacity: 0, scale: 0.85, y: 12 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 1.3, duration: 0.4, ease: "easeOut" }}
+          onClick={() => setShowBookCall(true)}
+          data-testid="button-book-call-sticky-mobile"
+          className="bg-white border-2 border-[#5550BA] text-[#5550BA] pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#EEEDfb] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
+        >
+          <Phone size={14} className="opacity-90" />
+          Book a Call
+        </motion.button>
+      </div>
       <div className="md:hidden fixed bottom-6 right-5 z-50">
         <motion.button
           initial={{ opacity: 0, scale: 0.85, y: 12 }}

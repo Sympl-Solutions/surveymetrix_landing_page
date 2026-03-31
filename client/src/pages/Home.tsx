@@ -1325,7 +1325,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-base md:text-lg text-[#4A5068] mb-10 leading-relaxed max-w-3xl mx-auto font-light"
             >
-              With SurveyMetrics, you choose your outcomes, build surveys in a few clicks, and measure participant change automatically — across every program, every cohort, every year.
+              With SurveyMetrix, you choose your outcomes, build surveys in a few clicks, and measure participant change automatically — across every program, every cohort, every year.
             </motion.p>
 
             <motion.div
@@ -1574,7 +1574,7 @@ export default function Home() {
                 step: "3",
                 title: "See outcomes — not just responses",
                 subtitle: "Data meets meaning",
-                body: "As responses come in, SurveyMetrics calculates outcomes automatically. How much did confidence improve? Which cohorts are performing best? You can answer those questions now — without touching a spreadsheet.",
+                body: "As responses come in, SurveyMetrix calculates outcomes automatically. How much did confidence improve? Which cohorts are performing best? You can answer those questions now — without touching a spreadsheet.",
                 mobileBody: "Responses become outcomes automatically. See which programs work — no spreadsheets needed.",
                 highlights: [],
                 visual: (

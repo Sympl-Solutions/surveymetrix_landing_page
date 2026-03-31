@@ -37,7 +37,9 @@ import {
   Crown,
   CreditCard,
   Instagram,
-  Facebook
+  Facebook,
+  Calendar,
+  Phone
 } from "lucide-react";
 
 const SECTOR_OPTIONS = [
@@ -115,6 +117,114 @@ function CountUp({ to, duration = 1.8, prefix = "", suffix = "", decimals = 0 }:
     <span ref={ref}>
       {prefix}{decimals > 0 ? count.toFixed(decimals) : Math.round(count).toLocaleString()}{suffix}
     </span>
+  );
+}
+
+const BOOK_CALL_URL = "https://calendar.app.google/692R14NdVAfa1AnX9";
+
+function BookCallModal({ isOpen, onClose, onBooked }: {
+  isOpen: boolean;
+  onClose: () => void;
+  onBooked: () => void;
+}) {
+  const [confirmed, setConfirmed] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) setConfirmed(false);
+  }, [isOpen]);
+
+  const handleBooked = () => {
+    onClose();
+    onBooked();
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-[#211E62]/60 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 16 }}
+            transition={{ duration: 0.25 }}
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto"
+          >
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 text-[#9DA4BC] hover:text-[#4A5068] transition-colors"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Header */}
+            <div className="px-7 pt-7 pb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-[#EEEDfb] flex items-center justify-center shrink-0">
+                  <Phone size={18} className="text-[#5550BA]" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-xl text-[#211E62] leading-tight">
+                    Book a Discovery Call
+                  </h3>
+                  <p className="text-xs text-[#9DA4BC] mt-0.5">15 min · Free · No commitment</p>
+                </div>
+              </div>
+              <p className="text-sm text-[#6A7290] leading-relaxed">
+                Pick a time that works for you — we'll walk through how SurveyMetrix fits your programs and answer any questions.
+              </p>
+            </div>
+
+            {/* Calendar embed */}
+            <div className="px-7">
+              <div
+                className="rounded-xl overflow-hidden border border-[#DAD8F6]"
+                style={{ height: '420px' }}
+              >
+                <iframe
+                  src={BOOK_CALL_URL}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  title="Book a Discovery Call"
+                />
+              </div>
+              <a
+                href={BOOK_CALL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1 text-xs text-[#5550BA] hover:underline mt-2 mb-1"
+              >
+                <Calendar size={12} /> Open booking page in new tab ↗
+              </a>
+            </div>
+
+            {/* Confirmation */}
+            <div className="px-7 py-5">
+              <div className="bg-[#F4F3FC] rounded-xl p-4 mb-4 border border-[#DAD8F6]">
+                <p className="text-xs text-[#4A5068] leading-relaxed">
+                  <span className="font-semibold text-[#211E62]">Once you've picked a time above</span>, click the button below. We'll also show you how to lock in your Founding Tester spot.
+                </p>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={handleBooked}
+                data-testid="button-booked-confirm"
+                className="w-full bg-[#5550BA] text-white font-semibold py-3 rounded-xl hover:bg-[#44429C] transition-colors text-sm flex items-center justify-center gap-2 shadow-md shadow-[#5550BA]/20"
+              >
+                <CheckCircle2 size={16} /> I've Booked My Call — What's Next?
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -1145,6 +1255,7 @@ export default function Home() {
   const [location, navigate] = useLocation();
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
+  const [showBookCall, setShowBookCall] = useState(false);
   const [showPledgeSuccess, setShowPledgeSuccess] = useState(location === '/pledge-success');
   const animationRef = useRef<HTMLDivElement>(null);
 
@@ -1177,6 +1288,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans selection:bg-[#B86890]/20">
       <WaitlistModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
+      <BookCallModal
+        isOpen={showBookCall}
+        onClose={() => setShowBookCall(false)}
+        onBooked={() => setShowWaitlist(true)}
+      />
 
       {/* Mobile sticky CTA — bottom-right, phone only */}
       <div className="md:hidden fixed bottom-6 right-5 z-50">
@@ -1336,6 +1452,13 @@ export default function Home() {
             >
               <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5">
                 Get Free Early Access
+              </button>
+              <button
+                onClick={() => setShowBookCall(true)}
+                data-testid="button-book-call-hero"
+                className="border border-[#5550BA] text-[#5550BA] bg-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#EEEDfb] transition-all hover:-translate-y-0.5 flex items-center gap-2"
+              >
+                <Phone size={16} /> Book a Call
               </button>
             </motion.div>
 

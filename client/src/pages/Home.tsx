@@ -154,7 +154,8 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.25 }}
-            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col overflow-hidden"
+            style={{ height: 'min(92vh, 820px)' }}
           >
             <button
               onClick={onClose}
@@ -163,8 +164,8 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               <X size={20} />
             </button>
 
-            {/* Header */}
-            <div className="px-7 pt-7 pb-4">
+            {/* Header — fixed, never scrolls */}
+            <div className="px-7 pt-7 pb-4 shrink-0">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-[#EEEDfb] flex items-center justify-center shrink-0">
                   <Phone size={18} className="text-[#5550BA]" />
@@ -181,22 +182,22 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               </p>
             </div>
 
-            {/* Calendar iframe — negative margin clips Google's own details header */}
-            <div className="px-7 pb-2">
-              <div className="rounded-xl overflow-hidden border border-[#DAD8F6]" style={{ height: '520px' }}>
+            {/* Calendar iframe — fills remaining height, clips Google's own header */}
+            <div className="px-7 flex-1 min-h-0">
+              <div className="rounded-xl overflow-hidden border border-[#DAD8F6] h-full">
                 <iframe
                   src={BOOK_CALL_URL}
-                  style={{ border: 0, marginTop: '-130px', display: 'block' }}
+                  style={{ border: 0, marginTop: '-200px', display: 'block' }}
                   width="100%"
-                  height="730"
+                  height="130%"
                   frameBorder="0"
                   title="Book a Discovery Call"
                 />
               </div>
             </div>
 
-            {/* Confirmation */}
-            <div className="px-7 py-5">
+            {/* Confirmation — fixed at bottom, never scrolls */}
+            <div className="px-7 py-5 shrink-0">
               <p className="text-xs text-[#6A7290] text-center mb-3">Once you've picked your slot, come back and click below:</p>
               <motion.button
                 whileTap={{ scale: 0.97 }}

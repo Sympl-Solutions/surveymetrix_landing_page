@@ -1282,8 +1282,6 @@ export default function Home() {
         
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 text-xs font-medium items-center uppercase tracking-wider">
-          <a href="#how-it-works" className="text-[#44429C] hover:text-[#211E62] transition-colors">How it works</a>
-          <a href="#impact-areas" className="text-[#44429C] hover:text-[#211E62] transition-colors">Impact Areas</a>
           <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold normal-case tracking-normal text-sm">
             Get Free Early Access
           </button>

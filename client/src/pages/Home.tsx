@@ -1145,7 +1145,6 @@ export default function Home() {
   const [location, navigate] = useLocation();
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showPledgeSuccess, setShowPledgeSuccess] = useState(location === '/pledge-success');
   const animationRef = useRef<HTMLDivElement>(null);
 
@@ -1178,6 +1177,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FDFCFA] text-[#211E62] font-sans selection:bg-[#B86890]/20">
       <WaitlistModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
+
+      {/* Mobile sticky CTA — bottom-right, phone only */}
+      <div className="md:hidden fixed bottom-6 right-5 z-50">
+        <motion.button
+          initial={{ opacity: 0, scale: 0.85, y: 12 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.4, ease: "easeOut" }}
+          onClick={() => setShowWaitlist(true)}
+          data-testid="button-waitlist-sticky-mobile"
+          className="bg-[#5550BA] text-white pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#44429C] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
+        >
+          <Sparkles size={15} className="opacity-90" />
+          Get Early Access
+        </motion.button>
+      </div>
 
       {/* Pledge success modal — shown after returning from Stripe /pledge-success */}
       <AnimatePresence>
@@ -1275,23 +1289,7 @@ export default function Home() {
           </button>
         </div>
         
-        {/* Mobile Nav Toggle */}
-        <div className="md:hidden">
-          <button className="text-[#4A5068]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} data-testid="button-mobile-menu">
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
       </header>
-
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-[#DAD8F6] px-6 py-4 flex flex-col gap-3 sticky top-[57px] z-50">
-          <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">How it works</a>
-          <a href="#impact-areas" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-[#44429C] py-2">Impact Areas</a>
-          <button onClick={() => { setShowWaitlist(true); setMobileMenuOpen(false); }} data-testid="button-waitlist-mobile-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg font-semibold text-sm w-full">
-            Get Early Access
-          </button>
-        </div>
-      )}
 
       {/* 2) Hero Section */}
       <section className="relative">

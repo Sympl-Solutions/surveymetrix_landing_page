@@ -163,14 +163,32 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               <X size={20} />
             </button>
 
-            {/* Calendar iframe */}
-            <div className="px-7 pt-10 pb-2">
-              <div className="rounded-xl overflow-hidden border border-[#DAD8F6]">
+            {/* Header */}
+            <div className="px-7 pt-7 pb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-[#EEEDfb] flex items-center justify-center shrink-0">
+                  <Phone size={18} className="text-[#5550BA]" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-xl text-[#211E62] leading-tight">
+                    Book a Discovery Call
+                  </h3>
+                  <p className="text-xs text-[#9DA4BC] mt-0.5">15 min · Free · No commitment</p>
+                </div>
+              </div>
+              <p className="text-sm text-[#6A7290] leading-relaxed">
+                Pick a time that works for you — we'll walk through how SurveyMetrix fits your programs and answer any questions.
+              </p>
+            </div>
+
+            {/* Calendar iframe — negative margin clips Google's own details header */}
+            <div className="px-7 pb-2">
+              <div className="rounded-xl overflow-hidden border border-[#DAD8F6]" style={{ height: '520px' }}>
                 <iframe
                   src={BOOK_CALL_URL}
-                  style={{ border: 0 }}
+                  style={{ border: 0, marginTop: '-130px', display: 'block' }}
                   width="100%"
-                  height="600"
+                  height="730"
                   frameBorder="0"
                   title="Book a Discovery Call"
                 />

@@ -39,7 +39,8 @@ import {
   Instagram,
   Facebook,
   Calendar,
-  Phone
+  Phone,
+  Clock
 } from "lucide-react";
 
 const SECTOR_OPTIONS = [
@@ -1243,6 +1244,7 @@ export default function Home() {
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [showBookCall, setShowBookCall] = useState(false);
+  const [showBookedSuccess, setShowBookedSuccess] = useState(false);
   const [showPledgeSuccess, setShowPledgeSuccess] = useState(location === '/pledge-success');
   const animationRef = useRef<HTMLDivElement>(null);
 
@@ -1278,8 +1280,88 @@ export default function Home() {
       <BookCallModal
         isOpen={showBookCall}
         onClose={() => setShowBookCall(false)}
-        onBooked={() => setShowWaitlist(true)}
+        onBooked={() => { setShowBookCall(false); setShowBookedSuccess(true); }}
       />
+
+      {/* Booked success modal — shown after confirming a discovery call */}
+      <AnimatePresence>
+        {showBookedSuccess && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowBookedSuccess(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 24 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full z-10 overflow-hidden"
+              data-testid="modal-booked-success"
+            >
+              <button
+                onClick={() => setShowBookedSuccess(false)}
+                className="absolute top-4 right-4 text-[#9DA4BC] hover:text-[#4A5068] transition-colors z-20"
+                data-testid="button-close-booked-success"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Header */}
+              <div className="bg-gradient-to-br from-[#211E62] via-[#2E2A78] to-[#1a1754] px-8 pt-8 pb-7 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-[#5550BA]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-28 h-28 bg-[#B86890]/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+                <div className="relative z-10">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.15 }}
+                    className="w-14 h-14 rounded-full bg-green-400/20 border border-green-400/40 flex items-center justify-center mb-5"
+                  >
+                    <CheckCircle2 size={30} className="text-green-400" />
+                  </motion.div>
+                  <h3 className="font-display font-bold text-2xl leading-tight mb-2">
+                    Your Call is Booked!
+                  </h3>
+                  <p className="text-[#C4C0E8] text-sm leading-relaxed">
+                    We're looking forward to speaking with you. Check your email for a calendar invite with all the details.
+                  </p>
+                </div>
+              </div>
+
+              {/* What to expect */}
+              <div className="bg-[#F4F3FC] px-8 py-6">
+                <p className="text-xs font-bold text-[#211E62] uppercase tracking-wider mb-4">What to expect</p>
+                <div className="space-y-3">
+                  {[
+                    { icon: Mail,     color: "text-[#5550BA]", bg: "bg-[#EEEDfb]", text: "Calendar invite sent to your inbox" },
+                    { icon: Clock,    color: "text-[#5550BA]", bg: "bg-[#EEEDfb]", text: "15 minutes — focused, no fluff" },
+                    { icon: Sparkles, color: "text-[#B86890]", bg: "bg-[#FAF0F3]", text: "Tailored walk-through for your org's needs" },
+                    { icon: Users,    color: "text-[#B86890]", bg: "bg-[#FAF0F3]", text: "Bring your toughest questions — we'll answer them" },
+                  ].map((item) => (
+                    <div key={item.text} className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
+                      <div className={`w-7 h-7 rounded-lg ${item.bg} flex items-center justify-center shrink-0`}>
+                        <item.icon size={14} className={item.color} />
+                      </div>
+                      <span className="text-sm text-[#4A5068]">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowBookedSuccess(false)}
+                  data-testid="button-booked-success-done"
+                  className="w-full mt-5 bg-[#5550BA] text-white font-bold py-3 rounded-xl hover:bg-[#211E62] transition-all text-sm"
+                >
+                  Back to SurveyMetrix
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile sticky CTA — bottom-right, phone only */}
       <div className="md:hidden fixed bottom-6 right-5 z-50">

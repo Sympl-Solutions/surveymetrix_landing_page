@@ -120,7 +120,7 @@ function CountUp({ to, duration = 1.8, prefix = "", suffix = "", decimals = 0 }:
   );
 }
 
-const BOOK_CALL_URL = "https://calendar.app.google/692R14NdVAfa1AnX9";
+const BOOK_CALL_URL = "https://calendar.google.com/calendar/appointments/schedules/AcZssZ2yXVWXPetWwBlLkuDobtxDSP9FVfzf_KWjUlfqTb5vU2DkPxZnAPq-7veYlscNgjStJZFnwLnP?gv=true";
 
 function BookCallModal({ isOpen, onClose, onBooked }: {
   isOpen: boolean;
@@ -154,7 +154,7 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.25 }}
-            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto"
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
           >
             <button
               onClick={onClose}
@@ -181,36 +181,17 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               </p>
             </div>
 
-            {/* Booking card */}
+            {/* Calendar iframe */}
             <div className="px-7 pb-2">
-              <div className="rounded-2xl border border-[#DAD8F6] bg-[#F4F3FC] p-5">
-                {/* Calendar details */}
-                <div className="flex items-start gap-4 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#DAD8F6] flex flex-col items-center justify-center shrink-0 shadow-sm">
-                    <span className="text-[9px] font-bold text-[#B86890] uppercase tracking-wider leading-none">call</span>
-                    <Calendar size={20} className="text-[#5550BA] mt-0.5" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-[#211E62] text-sm leading-tight">SurveyMetrix Discovery Call</p>
-                    <p className="text-xs text-[#6A7290] mt-1">15 minutes · Video call · Free</p>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {["Outcome measurement", "Program fit", "Q&A"].map(tag => (
-                        <span key={tag} className="text-[10px] bg-[#EEEDfb] text-[#5550BA] px-2 py-0.5 rounded-full font-medium">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <a
-                  href={BOOK_CALL_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="link-book-calendar"
-                  className="w-full bg-[#5550BA] text-white font-semibold py-3 rounded-xl hover:bg-[#44429C] transition-colors text-sm flex items-center justify-center gap-2 shadow-md shadow-[#5550BA]/20"
-                >
-                  <Calendar size={16} /> Open Booking Calendar ↗
-                </a>
-                <p className="text-center text-[10px] text-[#9DA4BC] mt-2">Opens in a new tab — pick any slot that works for you</p>
+              <div className="rounded-xl overflow-hidden border border-[#DAD8F6]">
+                <iframe
+                  src={BOOK_CALL_URL}
+                  style={{ border: 0 }}
+                  width="100%"
+                  height="600"
+                  frameBorder="0"
+                  title="Book a Discovery Call"
+                />
               </div>
             </div>
 
@@ -1403,7 +1384,7 @@ export default function Home() {
         
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-2 items-center">
-          <button onClick={() => setShowBookCall(true)} data-testid="button-book-call-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm flex items-center gap-1.5">
+          <button onClick={() => setShowBookCall(true)} data-testid="button-book-call-nav" className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent px-5 py-[9px] rounded-lg hover:bg-[#EEEDfb] transition-colors font-semibold text-sm flex items-center gap-1.5">
             <Phone size={14} /> Book a Call
           </button>
           <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
@@ -1458,13 +1439,13 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
             >
-              <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5">
+              <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 min-w-[200px] justify-center">
                 Get Free Early Access
               </button>
               <button
                 onClick={() => setShowBookCall(true)}
                 data-testid="button-book-call-hero"
-                className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 flex items-center gap-2"
+                className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#EEEDfb] transition-all hover:-translate-y-0.5 min-w-[200px] flex items-center justify-center gap-2"
               >
                 <Phone size={16} /> Book a Call
               </button>
@@ -2013,14 +1994,14 @@ export default function Home() {
               <button
                 onClick={() => setShowWaitlist(true)}
                 data-testid="button-waitlist-cta"
-                className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
+                className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >
                 Get Free Early Access <ArrowRight size={16} />
               </button>
               <button
                 onClick={() => setShowBookCall(true)}
                 data-testid="button-book-call-cta"
-                className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
+                className="border-2 border-white text-white bg-transparent text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >
                 <Phone size={16} /> Book a Call
               </button>

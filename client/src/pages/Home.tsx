@@ -135,6 +135,7 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
   }, [isOpen]);
 
   const handleBooked = () => {
+    trackGA('book_call_confirmed');
     onClose();
     onBooked();
   };
@@ -216,6 +217,10 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
   );
 }
 
+const trackGA = (eventName: string, params?: Record<string, any>) => {
+  (window as any).gtag?.('event', eventName, params);
+};
+
 function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -258,9 +263,10 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       setStep("pledge");
       // Update URL to /welcome for Meta URL-based conversion tracking
       window.history.pushState({}, '', '/welcome');
-      // Fire Meta Pixel Lead event on successful waitlist signup
+      // Fire Meta Pixel + GA4 Lead event on successful waitlist signup
       if (!data.alreadyExists) {
         (window as any).fbq?.('track', 'Lead');
+        trackGA('generate_lead', { method: 'waitlist_form' });
       }
     },
     onError: () => {
@@ -286,8 +292,9 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const handlePledge = async () => {
     if (!email.trim()) return;
     setPledgeLoading(true);
-    // Fire Meta Pixel InitiateCheckout when user clicks the pledge button
+    // Fire Meta Pixel + GA4 InitiateCheckout when user clicks the pledge button
     (window as any).fbq?.('track', 'InitiateCheckout', { value: 5, currency: 'USD' });
+    trackGA('begin_checkout', { currency: 'USD', value: 5 });
     try {
       const res = await fetch("/api/create-pledge-session", {
         method: "POST",
@@ -311,6 +318,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     if (isOpen) {
       // Step 2: fire when someone opens the Early Access modal
       (window as any).fbq?.('track', 'ViewContent', { content_name: 'Early Access Form' });
+      trackGA('modal_open', { modal_name: 'early_access' });
     } else {
       // Revert /welcome URL back to / when modal is dismissed
       if (window.location.pathname === '/welcome') {
@@ -1253,6 +1261,7 @@ export default function Home() {
     if (location === '/pledge-success') {
       setShowPledgeSuccess(true);
       (window as any).fbq?.('track', 'Purchase', { value: 5, currency: 'USD' });
+      trackGA('purchase', { currency: 'USD', value: 5, transaction_id: 'pledge' });
     }
   }, [location]);
 
@@ -1369,7 +1378,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.85, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 1.3, duration: 0.4, ease: "easeOut" }}
-          onClick={() => setShowBookCall(true)}
+          onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'mobile_sticky' }); setShowBookCall(true); }}
           data-testid="button-book-call-sticky-mobile"
           className="bg-white border-2 border-[#5550BA] text-[#5550BA] pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#EEEDfb] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
         >
@@ -1382,7 +1391,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.85, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.4, ease: "easeOut" }}
-          onClick={() => setShowWaitlist(true)}
+          onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'mobile_sticky' }); setShowWaitlist(true); }}
           data-testid="button-waitlist-sticky-mobile"
           className="bg-[#5550BA] text-white pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#44429C] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
         >
@@ -1480,10 +1489,10 @@ export default function Home() {
         
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-2 items-center">
-          <button onClick={() => setShowBookCall(true)} data-testid="button-book-call-nav" className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent px-5 py-[9px] rounded-lg hover:bg-[#EEEDfb] transition-colors font-semibold text-sm flex items-center gap-1.5">
+          <button onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'navbar' }); setShowBookCall(true); }} data-testid="button-book-call-nav" className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent px-5 py-[9px] rounded-lg hover:bg-[#EEEDfb] transition-colors font-semibold text-sm flex items-center gap-1.5">
             <Phone size={14} /> Book a Call
           </button>
-          <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
+          <button onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'navbar' }); setShowWaitlist(true); }} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
             Get Free Early Access
           </button>
         </div>
@@ -1535,11 +1544,11 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
             >
-              <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 min-w-[200px] justify-center">
+              <button onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'hero' }); setShowWaitlist(true); }} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 min-w-[200px] justify-center">
                 Get Free Early Access
               </button>
               <button
-                onClick={() => setShowBookCall(true)}
+                onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'hero' }); setShowBookCall(true); }}
                 data-testid="button-book-call-hero"
                 className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#EEEDfb] transition-all hover:-translate-y-0.5 min-w-[200px] flex items-center justify-center gap-2"
               >
@@ -2082,7 +2091,7 @@ export default function Home() {
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-[2.75rem] text-white mb-6 leading-[1.1]">
               Surveys are great but<br className="hidden md:block" />{' '}
               measuring{' '}
-              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcome</span>
+              <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#B86890] text-[110%]">outcomes</span>
               {' '}is even better
             </h2>
 
@@ -2092,14 +2101,14 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
-                onClick={() => setShowWaitlist(true)}
+                onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'footer' }); setShowWaitlist(true); }}
                 data-testid="button-waitlist-cta"
                 className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >
                 Get Free Early Access <ArrowRight size={16} />
               </button>
               <button
-                onClick={() => setShowBookCall(true)}
+                onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'footer' }); setShowBookCall(true); }}
                 data-testid="button-book-call-cta"
                 className="border-2 border-white text-white bg-transparent text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >
@@ -2130,6 +2139,7 @@ export default function Home() {
                 aria-label="SurveyMetrix on Instagram"
                 className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
                 data-testid="link-instagram"
+                onClick={() => trackGA('social_click', { platform: 'instagram' })}
               >
                 <Instagram size={16} />
               </a>
@@ -2140,6 +2150,7 @@ export default function Home() {
                 aria-label="SurveyMetrix on Facebook"
                 className="text-[#7268CD] hover:text-[#948EDE] transition-colors"
                 data-testid="link-facebook"
+                onClick={() => trackGA('social_click', { platform: 'facebook' })}
               >
                 <Facebook size={16} />
               </a>

@@ -181,37 +181,42 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               </p>
             </div>
 
-            {/* Calendar embed */}
-            <div className="px-7">
-              <div
-                className="rounded-xl overflow-hidden border border-[#DAD8F6]"
-                style={{ height: '420px' }}
-              >
-                <iframe
-                  src={BOOK_CALL_URL}
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  title="Book a Discovery Call"
-                />
+            {/* Booking card */}
+            <div className="px-7 pb-2">
+              <div className="rounded-2xl border border-[#DAD8F6] bg-[#F4F3FC] p-5">
+                {/* Calendar details */}
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-12 h-12 rounded-xl bg-white border border-[#DAD8F6] flex flex-col items-center justify-center shrink-0 shadow-sm">
+                    <span className="text-[9px] font-bold text-[#B86890] uppercase tracking-wider leading-none">call</span>
+                    <Calendar size={20} className="text-[#5550BA] mt-0.5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#211E62] text-sm leading-tight">SurveyMetrix Discovery Call</p>
+                    <p className="text-xs text-[#6A7290] mt-1">15 minutes · Video call · Free</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {["Outcome measurement", "Program fit", "Q&A"].map(tag => (
+                        <span key={tag} className="text-[10px] bg-[#EEEDfb] text-[#5550BA] px-2 py-0.5 rounded-full font-medium">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                  href={BOOK_CALL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="link-book-calendar"
+                  className="w-full bg-[#5550BA] text-white font-semibold py-3 rounded-xl hover:bg-[#44429C] transition-colors text-sm flex items-center justify-center gap-2 shadow-md shadow-[#5550BA]/20"
+                >
+                  <Calendar size={16} /> Open Booking Calendar ↗
+                </a>
+                <p className="text-center text-[10px] text-[#9DA4BC] mt-2">Opens in a new tab — pick any slot that works for you</p>
               </div>
-              <a
-                href={BOOK_CALL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1 text-xs text-[#5550BA] hover:underline mt-2 mb-1"
-              >
-                <Calendar size={12} /> Open booking page in new tab ↗
-              </a>
             </div>
 
             {/* Confirmation */}
             <div className="px-7 py-5">
-              <div className="bg-[#F4F3FC] rounded-xl p-4 mb-4 border border-[#DAD8F6]">
-                <p className="text-xs text-[#4A5068] leading-relaxed">
-                  <span className="font-semibold text-[#211E62]">Once you've picked a time above</span>, click the button below. We'll also show you how to lock in your Founding Tester spot.
-                </p>
-              </div>
+              <p className="text-xs text-[#6A7290] text-center mb-3">Once you've picked your slot, come back and click below:</p>
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={handleBooked}
@@ -1397,8 +1402,11 @@ export default function Home() {
         </div>
         
         {/* Desktop Nav */}
-        <div className="hidden md:flex gap-6 text-xs font-medium items-center uppercase tracking-wider">
-          <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold normal-case tracking-normal text-sm">
+        <div className="hidden md:flex gap-2 items-center">
+          <button onClick={() => setShowBookCall(true)} data-testid="button-book-call-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm flex items-center gap-1.5">
+            <Phone size={14} /> Book a Call
+          </button>
+          <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
             Get Free Early Access
           </button>
         </div>
@@ -1456,7 +1464,7 @@ export default function Home() {
               <button
                 onClick={() => setShowBookCall(true)}
                 data-testid="button-book-call-hero"
-                className="border border-[#5550BA] text-[#5550BA] bg-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#EEEDfb] transition-all hover:-translate-y-0.5 flex items-center gap-2"
+                className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <Phone size={16} /> Book a Call
               </button>
@@ -2001,13 +2009,22 @@ export default function Home() {
               Join the SurveyMetrix waitlist and get early access when we launch. Takes 30 seconds. No commitment.
             </p>
 
-            <button
-              onClick={() => setShowWaitlist(true)}
-              data-testid="button-waitlist-cta"
-              className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
-            >
-              Get Free Early Access <ArrowRight size={16} />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => setShowWaitlist(true)}
+                data-testid="button-waitlist-cta"
+                className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
+              >
+                Get Free Early Access <ArrowRight size={16} />
+              </button>
+              <button
+                onClick={() => setShowBookCall(true)}
+                data-testid="button-book-call-cta"
+                className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
+              >
+                <Phone size={16} /> Book a Call
+              </button>
+            </div>
 
           </motion.div>
 

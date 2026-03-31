@@ -1616,7 +1616,7 @@ export default function Home() {
               What outcome reporting is really costing your team
             </h2>
             <p className="text-[#6A7290] text-base max-w-xl mx-auto leading-relaxed">
-              For most nonprofits, impact reporting is a quarterly scramble — survey data scattered across platforms, hours lost to manual formatting, and funders asking for proof you don't have time to compile.
+              For most nonprofits, outcome reporting is a quarterly scramble — survey data scattered across platforms, hours lost to manual formatting, and funders asking for proof you don't have time to compile.
             </p>
           </motion.div>
 
@@ -1640,7 +1640,7 @@ export default function Home() {
                 suffix: "/yr",
                 decimals: 0,
                 label: "In annual reporting costs",
-                desc: "What mid-size nonprofits spend each year on consultants, freelancers, and staff overtime tied to impact reporting alone.",
+                desc: "What mid-size nonprofits spend each year on consultants, freelancers, and staff overtime tied to outcome reporting alone.",
                 color: "text-[#B86890]",
                 bg: "bg-[#FAF0F3]",
               },

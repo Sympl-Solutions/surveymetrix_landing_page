@@ -189,7 +189,7 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
                   src={BOOK_CALL_URL}
                   style={{ border: 0, marginTop: '-200px', display: 'block' }}
                   width="100%"
-                  height="130%"
+                  height="900"
                   frameBorder="0"
                   title="Book a Discovery Call"
                 />

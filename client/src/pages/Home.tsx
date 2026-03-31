@@ -182,14 +182,14 @@ function BookCallModal({ isOpen, onClose, onBooked }: {
               </p>
             </div>
 
-            {/* Calendar iframe — fills remaining height, clips Google's own header */}
+            {/* Calendar iframe — overflow-y:auto lets user scroll to booking form; negative margin clips Google's header */}
             <div className="px-7 flex-1 min-h-0">
-              <div className="rounded-xl overflow-hidden border border-[#DAD8F6] h-full">
+              <div className="rounded-xl border border-[#DAD8F6] h-full overflow-x-hidden overflow-y-auto">
                 <iframe
                   src={BOOK_CALL_URL}
                   style={{ border: 0, marginTop: '-200px', display: 'block' }}
                   width="100%"
-                  height="900"
+                  height="1400"
                   frameBorder="0"
                   title="Book a Discovery Call"
                 />

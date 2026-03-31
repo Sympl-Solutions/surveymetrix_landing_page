@@ -1378,7 +1378,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.85, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 1.3, duration: 0.4, ease: "easeOut" }}
-          onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'mobile_sticky' }); setShowBookCall(true); }}
+          onClick={() => { trackGA('CTA - Call - Mobile'); setShowBookCall(true); }}
           data-testid="button-book-call-sticky-mobile"
           className="bg-white border-2 border-[#5550BA] text-[#5550BA] pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#EEEDfb] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
         >
@@ -1391,7 +1391,7 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.85, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.4, ease: "easeOut" }}
-          onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'mobile_sticky' }); setShowWaitlist(true); }}
+          onClick={() => { trackGA('CTA - Access - Mobile'); setShowWaitlist(true); }}
           data-testid="button-waitlist-sticky-mobile"
           className="bg-[#5550BA] text-white pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#44429C] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
         >
@@ -1489,10 +1489,10 @@ export default function Home() {
         
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-2 items-center">
-          <button onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'navbar' }); setShowBookCall(true); }} data-testid="button-book-call-nav" className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent px-5 py-[9px] rounded-lg hover:bg-[#EEEDfb] transition-colors font-semibold text-sm flex items-center gap-1.5">
+          <button onClick={() => { trackGA('CTA - Call - Navbar'); setShowBookCall(true); }} data-testid="button-book-call-nav" className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent px-5 py-[9px] rounded-lg hover:bg-[#EEEDfb] transition-colors font-semibold text-sm flex items-center gap-1.5">
             <Phone size={14} /> Book a Call
           </button>
-          <button onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'navbar' }); setShowWaitlist(true); }} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
+          <button onClick={() => { trackGA('CTA - Access - Navbar'); setShowWaitlist(true); }} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold text-sm">
             Get Free Early Access
           </button>
         </div>
@@ -1544,11 +1544,11 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
             >
-              <button onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'hero' }); setShowWaitlist(true); }} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 min-w-[200px] justify-center">
+              <button onClick={() => { trackGA('CTA - Access - Hero'); setShowWaitlist(true); }} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5 min-w-[200px] justify-center">
                 Get Free Early Access
               </button>
               <button
-                onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'hero' }); setShowBookCall(true); }}
+                onClick={() => { trackGA('CTA - Call - Hero'); setShowBookCall(true); }}
                 data-testid="button-book-call-hero"
                 className="border-2 border-[#5550BA] text-[#5550BA] bg-transparent text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#EEEDfb] transition-all hover:-translate-y-0.5 min-w-[200px] flex items-center justify-center gap-2"
               >
@@ -2101,14 +2101,14 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
-                onClick={() => { trackGA('cta_click', { button: 'get_early_access', location: 'footer' }); setShowWaitlist(true); }}
+                onClick={() => { trackGA('CTA - Access - Footer'); setShowWaitlist(true); }}
                 data-testid="button-waitlist-cta"
                 className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >
                 Get Free Early Access <ArrowRight size={16} />
               </button>
               <button
-                onClick={() => { trackGA('cta_click', { button: 'book_a_call', location: 'footer' }); setShowBookCall(true); }}
+                onClick={() => { trackGA('CTA - Call - Footer'); setShowBookCall(true); }}
                 data-testid="button-book-call-cta"
                 className="border-2 border-white text-white bg-transparent text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 min-w-[200px] justify-center"
               >

@@ -272,7 +272,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <div className="w-12 h-12 rounded-xl bg-[#EEEDfb] flex items-center justify-center mb-4">
                 <Mail size={24} className="text-[#5550BA]" />
               </div>
-              <h3 className="font-display font-bold text-2xl text-[#211E62] mb-2">Get Early Access</h3>
+              <h3 className="font-display font-bold text-2xl text-[#211E62] mb-2">Get Free Early Access</h3>
               <p className="text-[#6A7290] mb-6">Be the first to know when SurveyMetrix launches. No spam, just updates.</p>
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
@@ -358,7 +358,7 @@ function WaitlistModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   {mutation.isPending ? (
                     <><Loader2 size={18} className="animate-spin" /> Joining...</>
                   ) : (
-                    "Get Early Access"
+                    "Get Free Early Access"
                   )}
                 </button>
               </form>
@@ -1189,7 +1189,7 @@ export default function Home() {
           className="bg-[#5550BA] text-white pl-4 pr-5 py-3 rounded-full shadow-xl hover:bg-[#44429C] active:scale-95 transition-all font-semibold text-sm flex items-center gap-2"
         >
           <Sparkles size={15} className="opacity-90" />
-          Get Early Access
+          Get Free Early Access
         </motion.button>
       </div>
 
@@ -1285,7 +1285,7 @@ export default function Home() {
           <a href="#how-it-works" className="text-[#44429C] hover:text-[#211E62] transition-colors">How it works</a>
           <a href="#impact-areas" className="text-[#44429C] hover:text-[#211E62] transition-colors">Impact Areas</a>
           <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-nav" className="bg-[#5550BA] text-white px-5 py-2.5 rounded-lg hover:bg-[#44429C] transition-colors font-semibold normal-case tracking-normal text-sm">
-            Get Early Access
+            Get Free Early Access
           </button>
         </div>
         
@@ -1337,7 +1337,7 @@ export default function Home() {
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10"
             >
               <button onClick={() => setShowWaitlist(true)} data-testid="button-waitlist-hero" className="bg-[#5550BA] text-white text-base font-semibold px-7 py-3 rounded-lg hover:bg-[#44429C] transition-all hover:-translate-y-0.5">
-                Get Early Access — It's Free
+                Get Free Early Access
               </button>
             </motion.div>
 
@@ -1885,7 +1885,7 @@ export default function Home() {
               data-testid="button-waitlist-cta"
               className="bg-[#B86890] text-white text-base font-semibold px-8 py-3.5 rounded-lg hover:bg-[#9E4A74] transition-all hover:-translate-y-0.5 inline-flex items-center gap-2"
             >
-              Get Early Access <ArrowRight size={16} />
+              Get Free Early Access <ArrowRight size={16} />
             </button>
 
           </motion.div>

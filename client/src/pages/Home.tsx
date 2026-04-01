@@ -1289,7 +1289,7 @@ export default function Home() {
       <BookCallModal
         isOpen={showBookCall}
         onClose={() => setShowBookCall(false)}
-        onBooked={() => { setShowBookCall(false); setShowBookedSuccess(true); }}
+        onBooked={() => { setShowBookCall(false); setShowBookedSuccess(true); window.history.pushState({}, '', '/welcome'); }}
       />
 
       {/* Booked success modal — shown after confirming a discovery call */}
@@ -1301,7 +1301,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setShowBookedSuccess(false)}
+              onClick={() => { setShowBookedSuccess(false); if (window.location.pathname === '/welcome') window.history.pushState({}, '', '/'); }}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -1312,7 +1312,7 @@ export default function Home() {
               data-testid="modal-booked-success"
             >
               <button
-                onClick={() => setShowBookedSuccess(false)}
+                onClick={() => { setShowBookedSuccess(false); if (window.location.pathname === '/welcome') window.history.pushState({}, '', '/'); }}
                 className="absolute top-4 right-4 text-[#9DA4BC] hover:text-[#4A5068] transition-colors z-20"
                 data-testid="button-close-booked-success"
               >
@@ -1360,7 +1360,7 @@ export default function Home() {
                   ))}
                 </div>
                 <button
-                  onClick={() => setShowBookedSuccess(false)}
+                  onClick={() => { setShowBookedSuccess(false); if (window.location.pathname === '/welcome') window.history.pushState({}, '', '/'); }}
                   data-testid="button-booked-success-done"
                   className="w-full mt-5 bg-[#5550BA] text-white font-bold py-3 rounded-xl hover:bg-[#211E62] transition-all text-sm"
                 >

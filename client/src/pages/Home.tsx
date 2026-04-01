@@ -1637,7 +1637,7 @@ export default function Home() {
                 value: 36,
                 suffix: " hrs",
                 decimals: 0,
-                label: "Per outcome report",
+                label: "Per impact report",
                 desc: "The average time nonprofits spend manually collecting survey data, reconciling spreadsheets, and formatting a single impact report.",
                 color: "text-[#5550BA]",
                 bg: "bg-[#EEEDfb]",

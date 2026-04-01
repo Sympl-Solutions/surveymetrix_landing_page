@@ -1526,7 +1526,7 @@ export default function Home() {
               <span style={{ fontStyle: "italic" }} className="text-[#B86890]">Finally.</span>{' '}
               A survey tool built for nonprofits{' '}
               that actually{' '}
-              <span style={{ fontStyle: "italic" }} className="text-[#5550BA]">measures outcomes</span>
+              <span style={{ fontStyle: "italic" }} className="text-[#5550BA]">measures impact</span>
             </motion.h1>
 
             <motion.p
@@ -1622,10 +1622,10 @@ export default function Home() {
               The reporting gap
             </div>
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-4">
-              What outcome reporting is really costing your team
+              What impact reporting is really costing your team
             </h2>
             <p className="text-[#6A7290] text-base max-w-xl mx-auto leading-relaxed">
-              For most nonprofits, outcome reporting is a quarterly scramble — survey data scattered across platforms, hours lost to manual formatting, and funders asking for proof you don't have time to compile.
+              For most nonprofits, impact reporting is a quarterly scramble — survey data scattered across platforms, hours lost to manual formatting, and funders asking for proof you don't have time to compile.
             </p>
           </motion.div>
 
@@ -1649,7 +1649,7 @@ export default function Home() {
                 suffix: "/yr",
                 decimals: 0,
                 label: "In annual reporting costs",
-                desc: "What mid-size nonprofits spend each year on consultants, freelancers, and staff overtime tied to outcome reporting alone.",
+                desc: "What mid-size nonprofits spend each year on consultants, freelancers, and staff overtime tied to impact reporting alone.",
                 color: "text-[#B86890]",
                 bg: "bg-[#FAF0F3]",
               },
@@ -1727,7 +1727,7 @@ export default function Home() {
               How it works
             </div>
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#211E62] mb-0">
-              Three steps to <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">real</span> outcomes
+              Three steps to <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }} className="text-[#5550BA]">real</span> impact
             </h2>
           </motion.div>
 
@@ -1974,7 +1974,7 @@ export default function Home() {
             <div className="w-full lg:w-5/12">
               <div className="text-xs font-semibold text-[#5550BA] uppercase tracking-widest mb-4">Cross-program outcomes</div>
               <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] text-[#211E62] mb-5 leading-[1.1]">
-                Every program, every cohort, one outcome view.
+                Every program, every cohort, one impact view.
               </h2>
               <p className="text-[#4A5068] text-base font-light leading-relaxed">
                 Instead of a separate spreadsheet for every program, SurveyMetrix automatically combines outcomes across all your programs — and keeps them updated as new responses come in.
